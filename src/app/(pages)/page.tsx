@@ -1,5 +1,5 @@
-import { Home } from '@/components/pages/home';
+import { Home } from '@/components/pages/home/home';
 
 export default function HomePage() {
-  return <Home initialNow={new Date().toISOString()} />;
+  return <Home />;
 }

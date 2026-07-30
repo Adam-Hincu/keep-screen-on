@@ -2,7 +2,7 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:is(.dark *:not(.light *)));
 
 @theme inline {
   /* Colors — shadcn / semantic */
@@ -10,8 +10,6 @@
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
-  --color-card-inverted: var(--card-inverted);
-  --color-card-inverted-foreground: var(--card-inverted-foreground);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
@@ -64,13 +62,6 @@
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-geist-sans);
 
-  /* Nothing / widget surface */
-  --color-widget: var(--widget);
-  --color-widget-foreground: var(--widget-foreground);
-  --color-widget-muted: var(--widget-muted);
-  --color-widget-border: var(--widget-border);
-  --color-widget-secondary: var(--widget-secondary);
-  --color-widget-secondary-foreground: var(--widget-secondary-foreground);
   --color-stop: var(--stop);
   --color-stop-foreground: var(--stop-foreground);
   --color-stop-hover: var(--stop-hover);
@@ -183,14 +174,13 @@
   --ease-emphasized: var(--ease-emphasized);
 }
 
-:root {
+:root,
+.light {
   /* —— Light theme —— */
   --background: oklch(0.925 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(0.985 0 0);
   --card-foreground: oklch(0.145 0 0);
-  --card-inverted: oklch(0.155 0 0);
-  --card-inverted-foreground: oklch(0.955 0 0);
   --popover: oklch(0.975 0 0);
   --popover-foreground: oklch(0.145 0 0);
   --primary: oklch(0.145 0 0);
@@ -215,18 +205,10 @@
   --ring: oklch(0.55 0 0);
   --muted-ghost-hover: oklch(0.885 0 0);
 
-  /* Nothing widget surface — inverted card alias */
-  --widget: var(--card-inverted);
-  --widget-foreground: var(--card-inverted-foreground);
-  --widget-muted: oklch(0.46 0 0);
-  --widget-border: oklch(0.84 0 0);
-  --widget-secondary: oklch(0.915 0 0);
-  --widget-secondary-foreground: oklch(0.16 0 0);
-
-  --stop: oklch(0.56 0 0);
+  --stop: oklch(0.628 0.258 29);
   --stop-foreground: oklch(0.985 0 0);
-  --stop-hover: oklch(0.49 0 0);
-  --stop-subtle: oklch(0.56 0 0 / 0.18);
+  --stop-hover: oklch(0.55 0.258 29);
+  --stop-subtle: oklch(0.628 0.258 29 / 0.18);
 
   /* Glass overlay */
   --glass: oklch(0.985 0 0 / 0.74);
@@ -359,8 +341,6 @@
   --foreground: oklch(0.955 0 0);
   --card: oklch(0.155 0 0);
   --card-foreground: oklch(0.955 0 0);
-  --card-inverted: oklch(0.975 0 0);
-  --card-inverted-foreground: oklch(0.145 0 0);
   --popover: oklch(0.175 0 0);
   --popover-foreground: oklch(0.955 0 0);
   --primary: oklch(0.955 0 0);
@@ -385,18 +365,10 @@
   --ring: oklch(0.64 0 0);
   --muted-ghost-hover: oklch(1 0 0 / 0.06);
 
-  /* Nothing widget surface — inverted card alias */
-  --widget: var(--card-inverted);
-  --widget-foreground: var(--card-inverted-foreground);
-  --widget-muted: oklch(0.48 0 0);
-  --widget-border: oklch(0.84 0 0);
-  --widget-secondary: oklch(0.91 0 0);
-  --widget-secondary-foreground: oklch(0.15 0 0);
-
-  --stop: oklch(0.62 0 0);
+  --stop: oklch(0.628 0.258 29);
   --stop-foreground: oklch(0.985 0 0);
-  --stop-hover: oklch(0.68 0 0);
-  --stop-subtle: oklch(0.62 0 0 / 0.22);
+  --stop-hover: oklch(0.68 0.258 29);
+  --stop-subtle: oklch(0.628 0.258 29 / 0.22);
 
   --glass: oklch(0.16 0 0 / 0.72);
   --glass-border: oklch(1 0 0 / 0.12);

@@ -1,53 +1,53 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Monitor, Moon, Sun } from "lucide-react"
-import { useTheme } from "next-themes"
+import * as React from "react";
+import { Monitor, Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
 
-import { Button } from "@/components/ui/shadcn/button"
-import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/shadcn/button";
+import { cn } from "@/lib/utils";
 
-const themes = ["light", "dark", "system"] as const
+const themes = ["light", "dark", "system"] as const;
 
-type Theme = (typeof themes)[number]
+type Theme = (typeof themes)[number];
 
 type ModeToggleProps = Omit<
   React.ComponentProps<typeof Button>,
   "variant" | "size" | "onClick"
 > & {
-  variant?: "default" | "ghost"
-}
+  variant?: "default" | "ghost";
+};
 
 function ModeToggle({
   variant = "default",
   className,
   ...props
 }: ModeToggleProps) {
-  const { theme, setTheme } = useTheme()
-  const [mounted, setMounted] = React.useState(false)
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
-    setMounted(true)
-  }, [])
+    setMounted(true);
+  }, []);
 
   const cycleTheme = () => {
-    const currentTheme = (theme ?? "system") as Theme
-    const currentIndex = themes.indexOf(currentTheme)
-    const nextIndex = (currentIndex + 1) % themes.length
-    setTheme(themes[nextIndex])
-  }
+    const currentTheme = (theme ?? "system") as Theme;
+    const currentIndex = themes.indexOf(currentTheme);
+    const nextIndex = (currentIndex + 1) % themes.length;
+    setTheme(themes[nextIndex]);
+  };
 
-  const buttonVariant = variant === "ghost" ? "ghost" : "outline"
-  const activeTheme = (theme ?? "system") as Theme
+  const buttonVariant = variant === "ghost" ? "ghost" : "outline";
+  const activeTheme = (theme ?? "system") as Theme;
   const Icon =
-    activeTheme === "light" ? Sun : activeTheme === "dark" ? Moon : Monitor
+    activeTheme === "light" ? Sun : activeTheme === "dark" ? Moon : Monitor;
 
   const label =
     activeTheme === "light"
       ? "Light mode"
       : activeTheme === "dark"
         ? "Dark mode"
-        : "System theme"
+        : "System theme";
 
   if (!mounted) {
     return (
@@ -59,9 +59,9 @@ function ModeToggle({
         disabled
         {...props}
       >
-        <span className="size-4" />
+        <span className="size-icon-sm" />
       </Button>
-    )
+    );
   }
 
   return (
@@ -76,12 +76,12 @@ function ModeToggle({
     >
       <Icon />
     </Button>
-  )
+  );
 }
 
 function ModeToggleGhost(props: Omit<ModeToggleProps, "variant">) {
-  return <ModeToggle variant="ghost" {...props} />
+  return <ModeToggle variant="ghost" {...props} />;
 }
 
-export { ModeToggle, ModeToggleGhost, themes }
-export type { ModeToggleProps, Theme }
+export { ModeToggle, ModeToggleGhost, themes };
+export type { ModeToggleProps, Theme };
