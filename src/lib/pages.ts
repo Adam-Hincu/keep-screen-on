@@ -5,7 +5,6 @@ export type SitePage = {
   path: `/${string}` | "/";
   title: string;
   description: string;
-  linkLabel: string;
   operatingSystem: string;
 };
 
@@ -16,7 +15,6 @@ export const sitePages: SitePage[] = [
     title: "Stop Your Screen from Automatically Turning Off — Free, No Signup",
     description:
       "Stop your screen from automatically turning off in your browser. Free. No login. No downloads.",
-    linkLabel: "All devices",
     operatingSystem: "Any",
   },
   {
@@ -26,7 +24,6 @@ export const sitePages: SitePage[] = [
       "Stop Your iPhone Screen from Automatically Turning Off — Free, No Signup",
     description:
       "Stop your iPhone screen from automatically turning off in your browser. Free. No login. No downloads.",
-    linkLabel: "iPhone & iPad",
     operatingSystem: "iOS",
   },
   {
@@ -36,7 +33,6 @@ export const sitePages: SitePage[] = [
       "Stop Your Phone Screen from Automatically Turning Off — Free, No Signup",
     description:
       "Stop your Android phone screen from automatically turning off in your browser. Free. No login. No downloads.",
-    linkLabel: "Android",
     operatingSystem: "Android",
   },
   {
@@ -46,7 +42,6 @@ export const sitePages: SitePage[] = [
       "Stop Your Mac Screen from Automatically Turning Off — Free, No Signup",
     description:
       "Stop your Mac screen from automatically turning off in your browser. Free. No login. No downloads.",
-    linkLabel: "Mac",
     operatingSystem: "macOS",
   },
   {
@@ -56,12 +51,9 @@ export const sitePages: SitePage[] = [
       "Stop Your Windows Screen from Automatically Turning Off — Free, No Signup",
     description:
       "Stop your Windows screen from automatically turning off in your browser. Free. No login. No downloads.",
-    linkLabel: "Windows",
     operatingSystem: "Windows",
   },
 ];
-
-export const platformPages = sitePages.filter((page) => page.key !== "home");
 
 export function getPageByKey(key: PageKey): SitePage {
   const page = sitePages.find((entry) => entry.key === key);

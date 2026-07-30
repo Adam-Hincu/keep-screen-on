@@ -1,13 +1,13 @@
-import { Hero } from "@/components/pages/windows/sections/hero";
+import { Hero } from "@/components/pages/shared/sections/hero";
 import { SeoSection } from "@/components/pages/windows/sections/seo-section";
-import { PageInset } from "@/components/pages/shared/page-inset";
-import { SectionSeparator } from "@/components/pages/shared/section-separator";
+import { PageInset } from "@/components/pages/shared/components/page-inset";
+import { SectionSeparator } from "@/components/pages/shared/components/section-separator";
 
 export function Windows() {
   return (
     <main className="flex flex-1 flex-col">
       <PageInset className="flex flex-1 flex-col">
-        <Hero />
+        <Hero title="Stop your computer from turning off" />
       </PageInset>
       <SectionSeparator />
       <PageInset>

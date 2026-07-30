@@ -213,6 +213,15 @@
   /* Glass overlay */
   --glass: oklch(0.985 0 0 / 0.74);
   --glass-border: oklch(0.16 0 0 / 0.09);
+  --blur-glass: var(--spacing-4);
+
+  --header-fade-from: var(--spacing-24);
+  --header-fade-to: calc(var(--spacing-24) * 2);
+  --header-surface: color-mix(
+    in oklch,
+    var(--background) calc((100% - var(--opacity-overlay) * 100%)),
+    transparent
+  );
 
   --brand: oklch(0.628 0.258 29);
   --brand-foreground: oklch(0.985 0 0);
@@ -372,6 +381,7 @@
 
   --glass: oklch(0.16 0 0 / 0.72);
   --glass-border: oklch(1 0 0 / 0.12);
+  --blur-glass: var(--spacing-4);
 
   --brand: oklch(0.628 0.258 29);
   --brand-foreground: oklch(0.985 0 0);

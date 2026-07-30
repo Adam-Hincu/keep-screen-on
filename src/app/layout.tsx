@@ -1,7 +1,7 @@
 import type { Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ModeToggle } from "@/components/ui/custom/mode-toggle";
+import { Header } from "@/components/pages/shared/components/header";
 import { ThemeProvider } from "@/components/theme-provider";
 import { rootMetadata } from "@/lib/metadata";
 import { siteConfig } from "@/lib/site";
@@ -50,9 +50,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="fixed top-4 right-4 z-50">
-            <ModeToggle />
-          </div>
+          <Header />
           {children}
         </ThemeProvider>
       </body>

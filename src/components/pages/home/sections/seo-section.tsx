@@ -1,20 +1,13 @@
-import {
-  bodyClassName,
-  headingClassName,
-  questionClassName,
-  subheadingClassName,
-} from "@/components/pages/shared/seo-section-styles";
-
 export function SeoSection() {
   return (
     <section className="pb-xl" aria-labelledby="seo-heading">
       <div className="flex flex-col gap-8">
         <div className="flex flex-col gap-4">
-          <h2 id="seo-heading" className={headingClassName}>
+          <h2 id="seo-heading" className="font-heading text-2xl font-semibold tracking-tight text-foreground">
             Keep Your Screen On Without Installing Anything
           </h2>
 
-          <div className={`flex flex-col gap-4 ${bodyClassName}`}>
+          <div className="flex flex-col gap-4 text-muted-foreground leading-relaxed">
             <p>
               Keep Screen On is a free browser tool that keeps your screen on
               and prevents it from turning off while this page remains open.
@@ -39,9 +32,9 @@ export function SeoSection() {
         </div>
 
         <div className="flex flex-col gap-4">
-          <h3 className={subheadingClassName}>Why keep your screen awake?</h3>
+          <h3 className="font-heading text-xl font-semibold tracking-tight text-foreground">Why keep your screen awake?</h3>
 
-          <div className={`flex flex-col gap-4 ${bodyClassName}`}>
+          <div className="flex flex-col gap-4 text-muted-foreground leading-relaxed">
             <p>
               The most common reason to keep your screen on is to stay marked as
               online or active in work apps, messaging platforms, remote desktop
@@ -66,9 +59,9 @@ export function SeoSection() {
         </div>
 
         <div className="flex flex-col gap-4">
-          <h3 className={subheadingClassName}>How it works</h3>
+          <h3 className="font-heading text-xl font-semibold tracking-tight text-foreground">How it works</h3>
 
-          <ul className={`flex list-none flex-col gap-2 ${bodyClassName}`}>
+          <ul className="flex list-none flex-col gap-2 text-muted-foreground leading-relaxed">
             <li>Choose No Limit, Custom, or one of the available time options.</li>
             <li>Press Start.</li>
             <li>Leave this page open while the timer is running.</li>
@@ -76,11 +69,11 @@ export function SeoSection() {
         </div>
 
         <div className="flex flex-col gap-4">
-          <h3 className={subheadingClassName}>Frequently asked questions</h3>
+          <h3 className="font-heading text-xl font-semibold tracking-tight text-foreground">Frequently asked questions</h3>
 
-          <dl className={`flex flex-col gap-4 ${bodyClassName}`}>
+          <dl className="flex flex-col gap-4 text-muted-foreground leading-relaxed">
             <div className="flex flex-col gap-2">
-              <dt className={questionClassName}>
+              <dt className="font-semibold text-foreground">
                 Does this change my screen timeout settings?
               </dt>
               <dd>
@@ -91,7 +84,7 @@ export function SeoSection() {
             </div>
 
             <div className="flex flex-col gap-2">
-              <dt className={questionClassName}>
+              <dt className="font-semibold text-foreground">
                 Does it stop my screen from locking?
               </dt>
               <dd>
@@ -102,7 +95,7 @@ export function SeoSection() {
             </div>
 
             <div className="flex flex-col gap-2">
-              <dt className={questionClassName}>
+              <dt className="font-semibold text-foreground">
                 Can it keep my computer awake?
               </dt>
               <dd>
@@ -114,7 +107,7 @@ export function SeoSection() {
             </div>
 
             <div className="flex flex-col gap-2">
-              <dt className={questionClassName}>
+              <dt className="font-semibold text-foreground">
                 Does it work on phones and computers?
               </dt>
               <dd>
@@ -125,12 +118,12 @@ export function SeoSection() {
             </div>
 
             <div className="flex flex-col gap-2">
-              <dt className={questionClassName}>Do I need to install anything?</dt>
+              <dt className="font-semibold text-foreground">Do I need to install anything?</dt>
               <dd>No. Everything runs directly in your browser.</dd>
             </div>
 
             <div className="flex flex-col gap-2">
-              <dt className={questionClassName}>
+              <dt className="font-semibold text-foreground">
                 What happens if I close the page?
               </dt>
               <dd>The Screen Wake Lock ends when the page is closed.</dd>

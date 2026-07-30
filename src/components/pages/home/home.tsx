@@ -1,18 +1,13 @@
-import { Hero } from "@/components/pages/home/sections/hero";
-import { PlatformLinks } from "@/components/pages/home/sections/platform-links";
+import { Hero } from "@/components/pages/shared/sections/hero";
 import { SeoSection } from "@/components/pages/home/sections/seo-section";
-import { PageInset } from "@/components/pages/shared/page-inset";
-import { SectionSeparator } from "@/components/pages/shared/section-separator";
+import { PageInset } from "@/components/pages/shared/components/page-inset";
+import { SectionSeparator } from "@/components/pages/shared/components/section-separator";
 
 export function Home() {
   return (
     <main className="flex flex-1 flex-col">
       <PageInset className="flex flex-1 flex-col">
-        <Hero />
-      </PageInset>
-      <SectionSeparator />
-      <PageInset className="pb-lg">
-        <PlatformLinks />
+        <Hero title="Stop your screen from turning off" />
       </PageInset>
       <SectionSeparator />
       <PageInset>
