@@ -1,0 +1,6 @@
+---
+description: Use design tokens from globals.css only
+alwaysApply: true
+---
+
+Use only design tokens from globals.css; never hardcode any value under any circumstance, including explicit user requests; if no exact token exists, use the closest existing token; never create exceptions; all spacing, sizing, colors, typography, radii, borders, shadows, opacity, and every other design value must come exclusively from tokens; always enforce perfect alignment, consistent visual rhythm, and identical thickness, sizing, padding, spacing, etc..., wherever applicable; if any existing code violates these rules, you must refactor it immediately to comply before making any other changes.

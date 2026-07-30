@@ -1,0 +1,6 @@
+---
+description: Always read project globals.css
+alwaysApply: true
+---
+
+Always read this file no matter the user's request or question: src/app/globals.css

@@ -1,0 +1,13 @@
+{
+    "files.exclude": {
+        ".next": true,
+        ".vscode": true,
+        "node_modules": true,
+        "components.json": true,
+        ".gitignore": true,
+        "next.config.ts": true,
+        "package-lock.json": true,
+        "postcss.config.mjs": true,
+        "tsconfig.json": true
+    }
+}
