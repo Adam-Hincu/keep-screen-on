@@ -1,0 +1,146 @@
+import {
+  bodyClassName,
+  headingClassName,
+  questionClassName,
+  subheadingClassName,
+} from "@/components/pages/shared/seo-section-styles";
+
+export function SeoSection() {
+  return (
+    <section className="pb-xl" aria-labelledby="seo-heading">
+      <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-4">
+          <h2 id="seo-heading" className={headingClassName}>
+            Keep Your Android Screen On Without Installing Anything
+          </h2>
+
+          <div className={`flex flex-col gap-4 ${bodyClassName}`}>
+            <p>
+              Keep Screen On is a free browser tool that keeps your Android
+              screen on and prevents it from turning off while this page remains
+              open. Choose a time limit or No Limit, press Start, and keep your
+              Android display awake without changing screen timeout or other
+              device settings.
+            </p>
+
+            <p>
+              The tool uses the Screen Wake Lock feature supported by Chrome and
+              other modern browsers on Android to prevent screen dimming, screen
+              sleep, and automatic locking while the timer is running. It does
+              not change your Android settings, and there is nothing to download
+              or install from the Play Store.
+            </p>
+
+            <p>
+              It works on Android phones and tablets in Chrome, Samsung Internet,
+              and other supported browsers. Whether you need to keep your Android
+              display on for a few minutes or keep your device awake for hours,
+              you can start the timer and let it run until you&apos;re finished.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-4">
+          <h3 className={subheadingClassName}>
+            Why keep your Android screen awake?
+          </h3>
+
+          <div className={`flex flex-col gap-4 ${bodyClassName}`}>
+            <p>
+              The most common reason to keep your Android screen on is to stay
+              marked as online or active in work apps, messaging platforms,
+              remote desktop sessions, and social media without your phone
+              entering sleep mode or locking while you&apos;re away.
+            </p>
+
+            <p>
+              It is also useful while downloads, uploads, backups, updates, and
+              other long-running tasks are in progress on your Android device.
+              Keeping your display awake helps prevent screen timeout, screen
+              dimming, and interruptions caused by sleep mode.
+            </p>
+
+            <p>
+              You can also use it whenever you want to keep your Android display
+              on, avoid repeated PIN or fingerprint prompts, prevent screen sleep
+              during presentations, or simply stop your phone from sleeping for
+              a while without changing your normal screen timeout settings.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-4">
+          <h3 className={subheadingClassName}>How it works</h3>
+
+          <ul className={`flex list-none flex-col gap-2 ${bodyClassName}`}>
+            <li>Choose No Limit, Custom, or one of the available time options.</li>
+            <li>Press Start.</li>
+            <li>Leave this page open while the timer is running.</li>
+          </ul>
+        </div>
+
+        <div className="flex flex-col gap-4">
+          <h3 className={subheadingClassName}>Frequently asked questions</h3>
+
+          <dl className={`flex flex-col gap-4 ${bodyClassName}`}>
+            <div className="flex flex-col gap-2">
+              <dt className={questionClassName}>
+                Does this change my Android screen timeout settings?
+              </dt>
+              <dd>
+                No. Your screen timeout and power settings stay exactly the
+                same. This tool keeps your Android screen awake without changing
+                your device settings.
+              </dd>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <dt className={questionClassName}>
+                Does it stop my Android phone from locking?
+              </dt>
+              <dd>
+                It helps keep your Android screen on and prevents screen sleep
+                while the timer is running. On some devices, security policies
+                or system restrictions may still lock the phone automatically.
+              </dd>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <dt className={questionClassName}>
+                Can it keep my Android device awake?
+              </dt>
+              <dd>
+                Yes. It helps keep your Android device awake so work apps,
+                messaging platforms, remote desktop sessions, dashboards, and
+                similar services are less likely to become inactive because the
+                screen turned off or the device entered sleep mode.
+              </dd>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <dt className={questionClassName}>
+                Does it work on Android phones and tablets?
+              </dt>
+              <dd>
+                Yes. It works on many modern Android phones and tablets in
+                Chrome, Samsung Internet, and other supported browsers.
+              </dd>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <dt className={questionClassName}>Do I need to install an app?</dt>
+              <dd>No. Everything runs directly in your Android browser.</dd>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <dt className={questionClassName}>
+                What happens if I close the page?
+              </dt>
+              <dd>The Screen Wake Lock ends when the page is closed.</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </section>
+  );
+}
