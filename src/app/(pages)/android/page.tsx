@@ -1,12 +1,14 @@
-import type { Metadata } from "next";
 import { Android } from "@/components/pages/android/android";
+import { WebApplicationJsonLd } from "@/components/seo/web-application-json-ld";
+import { createPageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: "Keep Android Screen On — Free Browser Tool",
-  description:
-    "Keep your Android screen on and prevent it from turning off. Free browser tool for Android phones and tablets — no app install, no settings changes.",
-};
+export const metadata = createPageMetadata("android");
 
 export default function AndroidPage() {
-  return <Android />;
+  return (
+    <>
+      <WebApplicationJsonLd pageKey="android" />
+      <Android />
+    </>
+  );
 }
