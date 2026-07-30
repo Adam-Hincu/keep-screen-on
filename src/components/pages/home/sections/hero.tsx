@@ -10,8 +10,11 @@ export function Hero() {
           <span className="text-brand">.</span>
         </span>
       </h1>
-      <div className="w-full sm:w-auto">
+      <div className="flex w-full flex-col items-center gap-2 sm:w-auto">
         <ToolCard />
+        <p className="text-xs text-muted-foreground">
+          Only works while this tab is open.
+        </p>
       </div>
     </section>
   );
