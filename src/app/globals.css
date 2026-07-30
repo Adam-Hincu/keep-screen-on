@@ -180,6 +180,10 @@
   --opacity-muted: var(--opacity-muted);
   --opacity-subtle: var(--opacity-subtle);
   --opacity-overlay: var(--opacity-overlay);
+
+  /* Motion */
+  --duration-normal: var(--duration-normal);
+  --ease-emphasized: var(--ease-emphasized);
 }
 
 :root {
@@ -351,6 +355,9 @@
   --opacity-muted: 0.6;
   --opacity-subtle: 0.3;
   --opacity-overlay: 0.08;
+
+  --duration-normal: 350ms;
+  --ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
 }
 
 .dark {
@@ -439,23 +446,39 @@
     );
   }
 
+  html,
+  body {
+    font-family: var(--font-sans);
+  }
+
   body {
     background-color: var(--background);
     color: var(--foreground);
-    font-family: var(--font-sans);
     font-size: var(--text-md);
     line-height: var(--text-md-line-height);
     font-weight: var(--font-weight-regular);
     letter-spacing: var(--letter-spacing-normal);
   }
 
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+  }
+
+  code,
+  kbd,
+  samp,
+  pre {
+    font-family: var(--font-mono);
+  }
+
   button:not(:disabled),
   [role="button"]:not(:disabled) {
     cursor: pointer;
-  }
-
-  html {
-    font-family: var(--font-sans);
   }
 }
 
@@ -468,5 +491,9 @@
   .no-native-spinner::-webkit-inner-spin-button {
     appearance: none;
     margin: var(--spacing-0);
+  }
+
+  .sliding-digit-strip {
+    transition: transform var(--duration-normal) var(--ease-emphasized);
   }
 }
