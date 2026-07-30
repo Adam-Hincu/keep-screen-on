@@ -38,7 +38,7 @@ export function Home() {
       <div className="flex flex-col items-center gap-md rounded-4xl border border-widget-border bg-widget p-xl text-widget-foreground shadow-md">
         <time
           dateTime={formatDateTime(now)}
-          className="flex items-center gap-2 text-display font-semibold leading-none tracking-tight"
+          className="flex items-center gap-2 text-display font-semibold tracking-tight"
         >
           <SlidingNumber value={time.hours} padStart />
           <span aria-hidden>:</span>

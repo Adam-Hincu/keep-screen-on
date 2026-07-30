@@ -1,6 +1,9 @@
-'use client';
-import { useEffect, useRef, useState } from 'react';
-import useMeasure from 'react-use-measure';
+'use client'
+
+import { useEffect, useRef, useState } from 'react'
+import useMeasure from 'react-use-measure'
+
+import { cn } from '@/lib/utils'
 
 const DIGITS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
 const STRIP = [...DIGITS, ...DIGITS, ...DIGITS];
@@ -49,24 +52,23 @@ function Digit({ value, place }: { value: number; place: number }) {
   }, [index, height, digit]);
 
   return (
-    <div className='relative inline-block w-[1ch] overflow-x-visible overflow-y-clip leading-none'>
-      <div ref={measureRef} className='invisible'>
+    <div className="relative inline-block w-[1ch] overflow-x-visible overflow-y-clip">
+      <div ref={measureRef} className="invisible">
         0
       </div>
       {height > 0 && (
         <div
           ref={stripRef}
-          className={
-            transitionEnabled
-              ? 'sliding-digit-strip absolute inset-x-0 top-0 flex flex-col'
-              : 'absolute inset-x-0 top-0 flex flex-col'
-          }
+          className={cn(
+            'absolute inset-x-0 top-0 flex flex-col',
+            transitionEnabled && 'sliding-digit-strip'
+          )}
           style={{ transform: `translateY(-${index * height}px)` }}
         >
           {STRIP.map((number, stripIndex) => (
             <span
               key={stripIndex}
-              className='flex items-center justify-center'
+              className="flex items-center justify-center"
               style={{ height }}
             >
               {number}
@@ -100,7 +102,7 @@ export function SlidingNumber({
   );
 
   return (
-    <div className='flex items-center font-mono tabular-nums'>
+    <div className="flex items-center font-mono tabular-nums">
       {value < 0 && '-'}
       {integerDigits.map((_, index) => (
         <Digit
