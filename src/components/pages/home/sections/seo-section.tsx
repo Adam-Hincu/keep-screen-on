@@ -76,10 +76,6 @@ export function SeoSection() {
             <li>Press Start.</li>
             <li>Leave this page open while the timer is running.</li>
           </ul>
-
-          <p className={bodyClassName}>
-            The Screen Wake Lock remains active while this page is open.
-          </p>
         </div>
 
         <div className="flex flex-col gap-4">
