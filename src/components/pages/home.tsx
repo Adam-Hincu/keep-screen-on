@@ -42,7 +42,7 @@ export function Home({ initialNow }: HomeProps) {
 
   return (
     <main className="flex min-h-full flex-1 items-center justify-center p-lg">
-      <div className="flex flex-col items-center gap-md rounded-4xl border border-widget-border bg-widget p-xl text-widget-foreground shadow-md">
+      <div className="flex flex-col items-center gap-md rounded-4xl bg-card p-xl text-card-foreground">
         <time
           dateTime={dateTime}
           suppressHydrationWarning
