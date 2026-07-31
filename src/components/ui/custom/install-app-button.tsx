@@ -29,15 +29,10 @@ function InstallAppButton({ className, ...props }: InstallAppButtonProps) {
     method: null,
   });
   const [manualOpen, setManualOpen] = React.useState(false);
-  const [mounted, setMounted] = React.useState(false);
 
   React.useLayoutEffect(() => {
     pwaInstall.start();
     return pwaInstall.subscribe(setState);
-  }, []);
-
-  React.useEffect(() => {
-    setMounted(true);
   }, []);
 
   const handleClick = async () => {
@@ -48,7 +43,7 @@ function InstallAppButton({ className, ...props }: InstallAppButtonProps) {
     }
   };
 
-  if (!mounted || !state.available) {
+  if (!state.available) {
     return null;
   }
 

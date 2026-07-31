@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 
 import { PageInset } from "@/components/pages/shared/components/page-inset";
 import { InstallAppButton } from "@/components/ui/custom/install-app-button";
+import { Logo } from "@/components/ui/custom/logo";
 import { ModeToggle } from "@/components/ui/custom/mode-toggle";
+import { siteConfig } from "@/lib/site";
 
 function readCssPx(variable: string) {
   const probe = document.createElement("div");
@@ -56,9 +58,20 @@ export function Header() {
               : undefined,
         }}
       />
-      <PageInset className="relative flex items-center justify-end gap-2 py-3">
-        <InstallAppButton />
-        <ModeToggle />
+      <PageInset className="relative flex items-center justify-between gap-2 py-3">
+        <div
+          aria-label={siteConfig.name}
+          className="flex min-w-0 items-center gap-2"
+        >
+          <Logo aria-hidden className="text-foreground" />
+          <span className="hidden truncate font-heading text-sm font-semibold tracking-tight text-foreground sm:inline">
+            Keep Screen ON
+          </span>
+        </div>
+        <div className="flex shrink-0 items-center gap-2">
+          <InstallAppButton />
+          <ModeToggle />
+        </div>
       </PageInset>
     </header>
   );

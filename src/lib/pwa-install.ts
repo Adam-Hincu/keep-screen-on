@@ -3,6 +3,26 @@ type BeforeInstallPromptEvent = Event & {
   userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 };
 
+declare global {
+  interface Window {
+    __keepScreenOnPwaInstallPrompt?: BeforeInstallPromptEvent;
+  }
+}
+
+/** Runs synchronously in layout before React so we never miss the event. */
+export const PWA_INSTALL_EARLY_CAPTURE_SCRIPT = `
+(function () {
+  if (typeof window === "undefined") return;
+  window.addEventListener("beforeinstallprompt", function (event) {
+    event.preventDefault();
+    window.__keepScreenOnPwaInstallPrompt = event;
+  });
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/pwa/sw.js", { scope: "/" }).catch(function () {});
+  }
+})();
+`.trim();
+
 export type PwaInstallMethod = "native" | "manual";
 
 export type PwaInstallState = {
@@ -113,6 +133,17 @@ export function createPwaInstallController(): PwaInstallController {
     notify();
   }
 
+  function consumeEarlyPrompt() {
+    const earlyPrompt = window.__keepScreenOnPwaInstallPrompt;
+
+    if (!earlyPrompt) {
+      return;
+    }
+
+    deferredPrompt = earlyPrompt;
+    delete window.__keepScreenOnPwaInstallPrompt;
+  }
+
   return {
     getState() {
       return buildState();
@@ -154,7 +185,14 @@ export function createPwaInstallController(): PwaInstallController {
     },
 
     start() {
-      if (started || !isBrowser()) {
+      if (!isBrowser()) {
+        return;
+      }
+
+      consumeEarlyPrompt();
+
+      if (started) {
+        notify();
         return;
       }
 

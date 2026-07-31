@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/pages/shared/components/header";
 import { ThemeProvider } from "@/components/theme-provider";
 import { rootMetadata } from "@/lib/metadata";
+import { PWA_INSTALL_EARLY_CAPTURE_SCRIPT } from "@/lib/pwa-install";
 import { siteConfig } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
@@ -45,6 +46,11 @@ export default function RootLayout({
       )}
     >
       <body className="min-h-full flex flex-col font-sans">
+        <script
+          dangerouslySetInnerHTML={{
+            __html: PWA_INSTALL_EARLY_CAPTURE_SCRIPT,
+          }}
+        />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
