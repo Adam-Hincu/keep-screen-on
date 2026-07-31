@@ -1,4 +1,10 @@
-export type PageKey = "home" | "iphone" | "android" | "mac" | "windows";
+export type PageKey =
+  | "home"
+  | "iphone"
+  | "android"
+  | "mac"
+  | "windows"
+  | "linux";
 
 export type SitePage = {
   key: PageKey;
@@ -12,7 +18,7 @@ export const sitePages: SitePage[] = [
   {
     key: "home",
     path: "/",
-    title: "Stop Your Screen from Automatically Turning Off — Free, No Signup",
+    title: "Prevent Your Screen from Automatically Turning Off — Free, No Signup",
     description:
       "Stop your screen from automatically turning off in your browser. Free. No login. No downloads.",
     operatingSystem: "Any",
@@ -21,7 +27,7 @@ export const sitePages: SitePage[] = [
     key: "iphone",
     path: "/iphone",
     title:
-      "Stop Your iPhone Screen from Automatically Turning Off — Free, No Signup",
+      "Prevent Your iPhone Screen from Automatically Turning Off — Free, No Signup",
     description:
       "Stop your iPhone screen from automatically turning off in your browser. Free. No login. No downloads.",
     operatingSystem: "iOS",
@@ -30,7 +36,7 @@ export const sitePages: SitePage[] = [
     key: "android",
     path: "/android",
     title:
-      "Stop Your Phone Screen from Automatically Turning Off — Free, No Signup",
+      "Prevent Your Phone Screen from Automatically Turning Off — Free, No Signup",
     description:
       "Stop your Android phone screen from automatically turning off in your browser. Free. No login. No downloads.",
     operatingSystem: "Android",
@@ -39,7 +45,7 @@ export const sitePages: SitePage[] = [
     key: "mac",
     path: "/mac",
     title:
-      "Stop Your Mac Screen from Automatically Turning Off — Free, No Signup",
+      "Prevent Your Mac Screen from Automatically Turning Off — Free, No Signup",
     description:
       "Stop your Mac screen from automatically turning off in your browser. Free. No login. No downloads.",
     operatingSystem: "macOS",
@@ -48,10 +54,19 @@ export const sitePages: SitePage[] = [
     key: "windows",
     path: "/windows",
     title:
-      "Stop Your Windows Screen from Automatically Turning Off — Free, No Signup",
+      "Prevent Your Computer Screen from Automatically Turning Off — Free, No Signup",
     description:
       "Stop your Windows screen from automatically turning off in your browser. Free. No login. No downloads.",
     operatingSystem: "Windows",
+  },
+  {
+    key: "linux",
+    path: "/linux",
+    title:
+      "Prevent Your Computer Screen from Automatically Turning Off — Free, No Signup",
+    description:
+      "Stop your Linux screen from automatically turning off in your browser. Free. No login. No downloads.",
+    operatingSystem: "Linux",
   },
 ];
 
