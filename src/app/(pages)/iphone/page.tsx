@@ -1,4 +1,5 @@
 import { Iphone } from "@/components/pages/iphone/iphone";
+import { FaqJsonLd } from "@/components/seo/faq-json-ld";
 import { WebApplicationJsonLd } from "@/components/seo/web-application-json-ld";
 import { createPageMetadata } from "@/lib/metadata";
 
@@ -8,6 +9,7 @@ export default function IphonePage() {
   return (
     <>
       <WebApplicationJsonLd pageKey="iphone" />
+      <FaqJsonLd pageKey="iphone" />
       <Iphone />
     </>
   );
