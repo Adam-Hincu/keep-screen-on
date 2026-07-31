@@ -1,7 +1,6 @@
 import type { Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Header } from "@/components/pages/shared/components/header";
 import { ThemeProvider } from "@/components/theme-provider";
 import { rootMetadata } from "@/lib/metadata";
 import { PWA_INSTALL_EARLY_CAPTURE_SCRIPT } from "@/lib/pwa-install";
@@ -23,7 +22,6 @@ const geistMono = Geist_Mono({
 export const metadata = rootMetadata;
 
 export const viewport: Viewport = {
-  viewportFit: "cover",
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: siteConfig.themeColor },
     { media: "(prefers-color-scheme: dark)", color: siteConfig.darkThemeColor },
@@ -57,7 +55,6 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Header />
           {children}
         </ThemeProvider>
       </body>

@@ -49,7 +49,6 @@ export const rootMetadata: Metadata = {
   applicationName: siteConfig.name,
   appleWebApp: {
     capable: true,
-    statusBarStyle: "black-translucent",
     title: siteConfig.name,
   },
   authors: [{ name: siteConfig.author, url: siteConfig.twitterUrl }],
