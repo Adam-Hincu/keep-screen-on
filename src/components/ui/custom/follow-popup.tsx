@@ -14,7 +14,10 @@ import {
   XSocialIcon,
   YoutubeSocialIcon,
 } from "@/components/ui/custom/social-icons";
-import { fireConfetti } from "@/components/ui/custom/confetti";
+import {
+  fireConfetti,
+  getFollowPopupConfettiOptions,
+} from "@/components/ui/custom/confetti";
 import { emailRegistrySources } from "@/lib/email-registry";
 import { socialLinks } from "@/lib/social-links";
 import { useEmailRegistrySubmit } from "@/hooks/use-email-registry-submit";
@@ -130,19 +133,7 @@ function FollowPopup() {
       if (confettiFiredRef.current || !popupRef.current) return;
 
       confettiFiredRef.current = true;
-
-      const rect = popupRef.current.getBoundingClientRect();
-      const originY = (rect.top + rect.height * 0.35) / window.innerHeight;
-
-      fireConfetti({
-        particleCount: 56,
-        origin: {
-          x: rect.left / window.innerWidth,
-          y: originY,
-        },
-        angle: -Math.PI * 0.75,
-        spread: Math.PI * 0.55,
-      });
+      fireConfetti(getFollowPopupConfettiOptions(popupRef.current));
     }, CONFETTI_DELAY_MS);
 
     return () => {
@@ -170,14 +161,18 @@ function FollowPopup() {
       aria-live="polite"
       aria-label="Follow Adam"
       className={cn(
-        "fixed right-0 bottom-0 z-40 w-[calc(100%-var(--spacing-8))] max-w-[calc(var(--spacing-24)*4+var(--spacing-12))] p-4 pr-[calc(var(--spacing-4)+var(--safe-area-inset-right))] pb-[calc(var(--spacing-4)+var(--safe-area-inset-bottom))] pl-[calc(var(--spacing-4)+var(--safe-area-inset-left))] transition-transform duration-normal ease-emphasized",
+        "fixed inset-x-0 bottom-0 z-40 w-full transition-transform duration-normal ease-emphasized sm:inset-x-auto sm:right-0 sm:w-[calc(100%-var(--spacing-8))] sm:max-w-[calc(var(--spacing-24)*4+var(--spacing-12))] sm:p-4 sm:pr-[calc(var(--spacing-4)+var(--safe-area-inset-right))] sm:pb-[calc(var(--spacing-4)+var(--safe-area-inset-bottom))] sm:pl-[calc(var(--spacing-4)+var(--safe-area-inset-left))]",
         open
           ? "pointer-events-auto translate-y-0"
           : "pointer-events-none translate-y-full",
       )}
     >
       <div
-        className="relative rounded-4xl border border-glass-border bg-glass p-md shadow-xl ring-[length:var(--border-default-width)] ring-border"
+        className={cn(
+          "relative border border-glass-border border-b-transparent bg-glass shadow-xl ring-[length:var(--border-default-width)] ring-border",
+          "rounded-t-4xl p-md pb-[calc(var(--padding-md)+var(--safe-area-inset-bottom))] pl-[calc(var(--padding-md)+var(--safe-area-inset-left))] pr-[calc(var(--padding-md)+var(--safe-area-inset-right))]",
+          "sm:rounded-4xl sm:border-b-glass-border sm:p-md sm:pb-md sm:pl-md sm:pr-md",
+        )}
         style={{
           backdropFilter: "blur(var(--blur-glass))",
           WebkitBackdropFilter: "blur(var(--blur-glass))",
@@ -214,7 +209,7 @@ function FollowPopup() {
           onSubmit={handleSubmit}
           noValidate
         >
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
             <input
               type="email"
               name="email"
@@ -226,12 +221,12 @@ function FollowPopup() {
               disabled={isSubmitting || isSuccess}
               aria-invalid={isError}
               aria-describedby={isError ? "follow-popup-email-error" : undefined}
-              className="h-10 min-w-0 flex-1 rounded-4xl border border-border bg-background px-3 text-sm text-foreground outline-none placeholder:text-muted-foreground disabled:opacity-disabled focus-visible:ring-[length:var(--ring-width-default)] focus-visible:ring-focus-ring-default aria-invalid:border-destructive-border aria-invalid:ring-[length:var(--ring-width-default)] aria-invalid:ring-destructive-ring"
+              className="h-10 min-w-0 w-full rounded-4xl border border-border bg-background px-3 text-sm text-foreground outline-none placeholder:text-muted-foreground disabled:opacity-disabled focus-visible:ring-[length:var(--ring-width-default)] focus-visible:ring-focus-ring-default aria-invalid:border-destructive-border aria-invalid:ring-[length:var(--ring-width-default)] aria-invalid:ring-destructive-ring sm:flex-1"
             />
             <Button
               type="submit"
               size="default"
-              className="shrink-0"
+              className="w-full shrink-0 sm:w-auto"
               disabled={isSubmitting || isSuccess}
             >
               {isSuccess ? "Joined!" : isSubmitting ? "Joining..." : "Join!"}

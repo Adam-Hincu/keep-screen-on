@@ -1,7 +1,7 @@
 -- =============================================================================
 -- Keep Screen ON — email registry (Supabase / PostgreSQL)
 --
--- One-way email gate: rows are never deleted. The app only calls
+-- One-way email gate. The app only calls
 --   submit_keep_screen_on_email(text, text, text, text)
 -- and never reads from the table. All insert/update logic lives in Postgres.
 --
@@ -98,19 +98,6 @@ END;
 $$;
 
 
-CREATE OR REPLACE FUNCTION public.keep_screen_on_prevent_delete()
-RETURNS trigger
-LANGUAGE plpgsql
-SET search_path = public
-AS $$
-BEGIN
-  RAISE EXCEPTION 'Email registry entries cannot be deleted.'
-    USING ERRCODE = '42501';
-  RETURN NULL;
-END;
-$$;
-
-
 CREATE OR REPLACE FUNCTION public.keep_screen_on_guard_insert()
 RETURNS trigger
 LANGUAGE plpgsql
@@ -176,12 +163,6 @@ BEGIN
 END;
 $$;
 
-
-DROP TRIGGER IF EXISTS trg_keep_screen_on_no_delete ON public."Keep Screen ON";
-CREATE TRIGGER trg_keep_screen_on_no_delete
-  BEFORE DELETE ON public."Keep Screen ON"
-  FOR EACH ROW
-  EXECUTE FUNCTION public.keep_screen_on_prevent_delete();
 
 DROP TRIGGER IF EXISTS trg_keep_screen_on_guard_insert ON public."Keep Screen ON";
 CREATE TRIGGER trg_keep_screen_on_guard_insert
@@ -302,6 +283,5 @@ REVOKE ALL ON FUNCTION public.submit_keep_screen_on_email(text, text, text, text
 GRANT EXECUTE ON FUNCTION public.submit_keep_screen_on_email(text, text, text, text) TO anon, authenticated;
 
 REVOKE ALL ON FUNCTION public.keep_screen_on_assert_internal_write() FROM PUBLIC, anon, authenticated;
-REVOKE ALL ON FUNCTION public.keep_screen_on_prevent_delete() FROM PUBLIC, anon, authenticated;
 REVOKE ALL ON FUNCTION public.keep_screen_on_guard_insert() FROM PUBLIC, anon, authenticated;
 REVOKE ALL ON FUNCTION public.keep_screen_on_guard_update() FROM PUBLIC, anon, authenticated;

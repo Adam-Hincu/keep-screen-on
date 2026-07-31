@@ -2,13 +2,15 @@
 
 import * as React from "react";
 
-const COLOR_TOKENS = [
-  "--brand",
-  "--destructive",
-  "--foreground",
-  "--primary",
-  "--brand-accent-foreground",
-  "--chart-4",
+const CONFETTI_COLORS = [
+  "#ff6b6b",
+  "#ffd93d",
+  "#6bcb77",
+  "#4d96ff",
+  "#ff6fd8",
+  "#ff922b",
+  "#845ef7",
+  "#20c997",
 ] as const;
 
 const DEFAULT_PARTICLE_COUNT = 64;
@@ -27,6 +29,43 @@ export type ConfettiOptions = {
   spread?: number;
   onComplete?: () => void;
 };
+
+const DESKTOP_MEDIA_QUERY = "(min-width: 640px)";
+
+function isDesktopViewport(): boolean {
+  return window.matchMedia(DESKTOP_MEDIA_QUERY).matches;
+}
+
+/** Confetti tuned for the follow popup: always originates from the card. */
+export function getFollowPopupConfettiOptions(
+  popupElement: HTMLElement,
+): ConfettiOptions {
+  const rect = popupElement.getBoundingClientRect();
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
+
+  if (!isDesktopViewport()) {
+    return {
+      particleCount: 56,
+      origin: {
+        x: (rect.left + rect.width / 2) / viewportWidth,
+        y: (rect.top + rect.height * 0.15) / viewportHeight,
+      },
+      angle: -Math.PI / 2,
+      spread: Math.PI * 0.85,
+    };
+  }
+
+  return {
+    particleCount: 56,
+    origin: {
+      x: rect.left / viewportWidth,
+      y: (rect.top + rect.height * 0.35) / viewportHeight,
+    },
+    angle: -Math.PI * 0.75,
+    spread: Math.PI * 0.55,
+  };
+}
 
 type Particle = {
   x: number;
@@ -66,23 +105,6 @@ function tokenToPx(name: string, fallbackPx: number): number {
   if (raw.endsWith("px")) return parseFloat(raw);
 
   return fallbackPx;
-}
-
-function resolveTokenColor(token: string): string {
-  const probe = document.createElement("span");
-  probe.style.setProperty("color", `var(${token})`);
-  probe.style.position = "absolute";
-  probe.style.visibility = "hidden";
-  document.body.appendChild(probe);
-  const resolved = getComputedStyle(probe).color;
-  probe.remove();
-  return resolved;
-}
-
-function readColors(): string[] {
-  return COLOR_TOKENS.map(resolveTokenColor).filter(
-    (color) => color.length > 0 && color !== "rgba(0, 0, 0, 0)",
-  );
 }
 
 function prefersReducedMotion(): boolean {
@@ -127,9 +149,6 @@ function spawnParticles({
   angle = DEFAULT_ANGLE,
   spread = DEFAULT_SPREAD,
 }: ConfettiOptions) {
-  const colors = readColors();
-  if (colors.length === 0) return;
-
   const width = window.innerWidth;
   const height = window.innerHeight;
   const originX = origin.x * width;
@@ -147,7 +166,8 @@ function spawnParticles({
       vy: Math.sin(particleAngle) * speed,
       w: sizeBase * (0.55 + Math.random() * 0.75),
       h: sizeBase * (0.35 + Math.random() * 0.55),
-      color: colors[Math.floor(Math.random() * colors.length)]!,
+      color:
+        CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)]!,
       rotation: Math.random() * Math.PI * 2,
       spin: (Math.random() - 0.5) * 0.22,
       life: 1,
