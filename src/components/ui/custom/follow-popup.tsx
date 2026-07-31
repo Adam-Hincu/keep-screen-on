@@ -14,16 +14,64 @@ import {
   XSocialIcon,
   YoutubeSocialIcon,
 } from "@/components/ui/custom/social-icons";
+import { emailRegistrySources } from "@/lib/email-registry";
+import { socialLinks } from "@/lib/social-links";
+import { useEmailRegistrySubmit } from "@/hooks/use-email-registry-submit";
 import { cn } from "@/lib/utils";
 
 const SHOW_DELAY_MS = 4000;
 const HIDE_DURATION_MS = 350;
+const SUCCESS_DISMISS_MS = 1800;
+
+type SocialLinkButtonProps = {
+  href: string;
+  label: string;
+  children: React.ReactNode;
+};
+
+function SocialLinkButton({ href, label, children }: SocialLinkButtonProps) {
+  return (
+    <Button
+      nativeButton={false}
+      render={
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={label}
+        />
+      }
+      variant="outline"
+      size="icon"
+    >
+      {children}
+    </Button>
+  );
+}
 
 function FollowPopup() {
   const [mounted, setMounted] = React.useState(false);
   const [active, setActive] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [dismissed, setDismissed] = React.useState(false);
+  const [email, setEmail] = React.useState("");
+
+  const dismissPopup = React.useCallback(() => {
+    setOpen(false);
+
+    window.setTimeout(() => {
+      setActive(false);
+      setDismissed(true);
+    }, HIDE_DURATION_MS);
+  }, []);
+
+  const { submit, isSubmitting, isSuccess, isError, errorMessage } =
+    useEmailRegistrySubmit({
+      source: emailRegistrySources.followPopup,
+      onSuccess: () => {
+        window.setTimeout(dismissPopup, SUCCESS_DISMISS_MS);
+      },
+    });
 
   React.useEffect(() => {
     setMounted(true);
@@ -60,13 +108,14 @@ function FollowPopup() {
     };
   }, [dismissed]);
 
-  const handleDismiss = () => {
-    setOpen(false);
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-    window.setTimeout(() => {
-      setActive(false);
-      setDismissed(true);
-    }, HIDE_DURATION_MS);
+    if (isSubmitting || isSuccess) {
+      return;
+    }
+
+    await submit(email);
   };
 
   if (!mounted || !active) {
@@ -81,7 +130,7 @@ function FollowPopup() {
         "fixed right-0 bottom-0 z-40 w-[calc(100%-var(--spacing-8))] max-w-[calc(var(--spacing-24)*4+var(--spacing-12))] origin-bottom-right p-4 pr-[calc(var(--spacing-4)+var(--safe-area-inset-right))] pb-[calc(var(--spacing-4)+var(--safe-area-inset-bottom))] pl-[calc(var(--spacing-4)+var(--safe-area-inset-left))] transition-[opacity,transform] duration-normal ease-emphasized will-change-transform",
         open
           ? "pointer-events-auto translate-x-0 translate-y-0 opacity-100"
-          : "pointer-events-none translate-x-8 translate-y-10 opacity-0"
+          : "pointer-events-none translate-x-8 translate-y-10 opacity-0",
       )}
     >
       <div
@@ -94,7 +143,7 @@ function FollowPopup() {
         <button
           type="button"
           aria-label="Close"
-          onClick={handleDismiss}
+          onClick={dismissPopup}
           className="absolute top-3 right-3 rounded-full text-muted-foreground transition-colors duration-normal ease-emphasized outline-none hover:text-foreground focus-visible:ring-[length:var(--ring-width-default)] focus-visible:ring-focus-ring-default"
         >
           <XIcon className="size-icon-sm" />
@@ -118,51 +167,61 @@ function FollowPopup() {
         </div>
 
         <form
-          className="mt-4 flex items-center gap-2"
-          onSubmit={(event) => {
-            event.preventDefault();
-          }}
+          className="mt-4 flex flex-col gap-2"
+          onSubmit={handleSubmit}
+          noValidate
         >
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            autoComplete="email"
-            readOnly
-            aria-readonly="true"
-            tabIndex={-1}
-            className="h-10 min-w-0 flex-1 rounded-4xl border border-border bg-background px-3 text-sm text-foreground outline-none placeholder:text-muted-foreground"
-          />
-          <Button type="submit" size="default" className="shrink-0">
-            Join!
-          </Button>
+          <div className="flex items-center gap-2">
+            <input
+              type="email"
+              name="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              placeholder="Email"
+              autoComplete="email"
+              required
+              disabled={isSubmitting || isSuccess}
+              aria-invalid={isError}
+              aria-describedby={isError ? "follow-popup-email-error" : undefined}
+              className="h-10 min-w-0 flex-1 rounded-4xl border border-border bg-background px-3 text-sm text-foreground outline-none placeholder:text-muted-foreground disabled:opacity-disabled focus-visible:ring-[length:var(--ring-width-default)] focus-visible:ring-focus-ring-default aria-invalid:border-destructive-border aria-invalid:ring-[length:var(--ring-width-default)] aria-invalid:ring-destructive-ring"
+            />
+            <Button
+              type="submit"
+              size="default"
+              className="shrink-0"
+              disabled={isSubmitting || isSuccess}
+            >
+              {isSuccess ? "Joined!" : isSubmitting ? "Joining..." : "Join!"}
+            </Button>
+          </div>
+
+          {isError && errorMessage ? (
+            <p
+              id="follow-popup-email-error"
+              role="alert"
+              className="text-sm text-destructive"
+            >
+              {errorMessage}
+            </p>
+          ) : null}
         </form>
 
         <div className="mt-3 flex items-center gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            aria-label="X"
-          >
-            <XSocialIcon />
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            aria-label="YouTube"
-          >
-            <YoutubeSocialIcon />
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            aria-label="Discord"
-          >
-            <DiscordSocialIcon />
-          </Button>
+          {socialLinks.x ? (
+            <SocialLinkButton href={socialLinks.x} label="X">
+              <XSocialIcon />
+            </SocialLinkButton>
+          ) : null}
+          {socialLinks.youtube ? (
+            <SocialLinkButton href={socialLinks.youtube} label="YouTube">
+              <YoutubeSocialIcon />
+            </SocialLinkButton>
+          ) : null}
+          {socialLinks.discord ? (
+            <SocialLinkButton href={socialLinks.discord} label="Discord">
+              <DiscordSocialIcon />
+            </SocialLinkButton>
+          ) : null}
         </div>
       </div>
     </aside>
