@@ -3,57 +3,87 @@ export function SeoSection() {
     <section className="pb-xl" aria-labelledby="seo-heading">
       <div className="flex flex-col gap-8">
         <div className="flex flex-col gap-4">
-          <h2 id="seo-heading" className="font-heading text-2xl font-semibold tracking-tight text-foreground">
-            Keep Your Screen On Without Installing Anything
+          <h2
+            id="seo-heading"
+            className="font-heading text-2xl font-semibold tracking-tight text-foreground"
+          >
+            Keep Screen On — Free Browser Wake Lock, No Signup
           </h2>
 
           <div className="flex flex-col gap-4 text-muted-foreground leading-relaxed">
             <p>
-              Keep Screen On is a free browser tool that keeps your screen on
-              and prevents it from turning off while this page remains open.
-              Choose a time limit or No Limit, press Start, and keep your screen
-              awake without changing your screen timeout or device settings.
+              Keep Screen On is a free online wake lock that helps keep screen
+              on, keep display on, and keep screen awake without installing
+              anything or creating an account. Pick Always On, Custom, or a
+              display timeout preset, activate browser wake lock, and prevent
+              screen sleep — screen timeout and display timeout stay unchanged.
             </p>
 
             <p>
-              The tool uses the Screen Wake Lock feature supported by modern
-              browsers to prevent screen dimming, screen sleep, and automatic
-              locking while the timer is running. It does not change your device
-              settings, and there is nothing to download or install.
+              Browser screen timeout control uses the Screen Wake Lock API to
+              prevent screen dimming, display sleep, auto lock, and system
+              sleep while wake lock is active. Free wake lock runs entirely in
+              browser — no download, no signup, no app install required.
             </p>
 
             <p>
-              It works on phones, tablets, laptops, and desktop computers.
-              Whether you need to keep your display on for a few minutes or keep
-              your computer awake for hours, you can start the timer and let it
-              run until you&apos;re finished.
+              Keep phone awake, keep laptop awake, keep computer awake during
+              long sessions. Need screen always on for display timeout or screen
+              stays awake for hours? Browser wake lock keeps screen active
+              until session ends.
             </p>
           </div>
         </div>
 
         <div className="flex flex-col gap-4">
-          <h3 className="font-heading text-xl font-semibold tracking-tight text-foreground">Why keep your screen awake?</h3>
+          <h3 className="font-heading text-xl font-semibold tracking-tight text-foreground">
+            Why keep screen awake?
+          </h3>
 
           <div className="flex flex-col gap-4 text-muted-foreground leading-relaxed">
             <p>
-              The most common reason to keep your screen on is to stay marked as
-              online or active in work apps, messaging platforms, remote desktop
-              sessions, and social media without your computer entering sleep
-              mode or locking while you&apos;re away.
+              Keep screen awake, stay awake in work apps, messaging, remote
+              desktop, dashboards without display sleep, screen sleep, sleep
+              mode ending session. Browser wake lock helps remain active
+              instead of going idle when display turns off.
             </p>
 
             <p>
-              It is also useful while downloads, uploads, backups, updates, and
-              other long-running or background tasks are in progress. Keeping
-              your computer awake helps prevent screen timeout, screen dimming,
-              and interruptions caused by sleep mode.
+              Prevent screen dimming, display timeout interruptions during
+              downloads, uploads, backups, updates. Online wake lock keeps
+              display on, reduces idle lock prompts, helps stop screen sleeping
+              — simple way to disable screen timeout temporarily without
+              editing screen timeout settings.
             </p>
 
             <p>
-              You can also use it whenever you want to keep your display on,
-              avoid repeated PIN or password prompts, prevent screen sleep
-              during presentations, or simply stop your computer from sleeping
-              for a while without changing your normal power settings.
+              Use no sleep page for presentations, reading, whenever screen
+              always on, keep display on matter. Works on phones, tablets,
+              laptops, desktop computers with Screen Wake Lock support — free
+              wake lock, always available, no signup required.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-4">
+          <h3 className="font-heading text-xl font-semibold tracking-tight text-foreground">
+            Screen wake lock — how it helps
+          </h3>
+
+          <div className="flex flex-col gap-4 text-muted-foreground leading-relaxed">
+            <p>
+              Screen wake lock prevents screen sleep, display sleep while page
+              stays open. Does not change device settings — screen timeout
+              settings, auto lock rules, power preferences stay same. Wake
+              lock keeps screen on, keeps screen awake until page closes.
+            </p>
+
+            <p>
+              Some devices may still enforce auto lock, system sleep through
+              security policies. For most users, browser wake lock is enough to
+              keep screen on, prevent screen dimming, stop screen sleeping
+              during presentations, monitoring dashboards, remote desktop
+              sessions, long background tasks.
             </p>
           </div>
         </div>

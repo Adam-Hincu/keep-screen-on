@@ -306,12 +306,12 @@ export function ToolCard() {
           type="button"
           variant={selection === "infinite" ? "default" : "outline"}
           className={buttonClassName}
-          aria-label="Keep screen on with no time limit"
+          aria-label="Keep screen on with always-on mode"
           aria-pressed={selection === "infinite"}
           disabled={isActive}
           onClick={() => selectDuration("infinite")}
         >
-          No Limit
+          Always On
         </Button>
         <Button
           type="button"
