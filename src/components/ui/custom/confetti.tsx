@@ -1,0 +1,255 @@
+"use client";
+
+import * as React from "react";
+
+const COLOR_TOKENS = [
+  "--brand",
+  "--destructive",
+  "--foreground",
+  "--primary",
+  "--brand-accent-foreground",
+  "--chart-4",
+] as const;
+
+const DEFAULT_PARTICLE_COUNT = 64;
+const DEFAULT_ORIGIN = { x: 0.5, y: 0.55 };
+const DEFAULT_ANGLE = -Math.PI / 2;
+const DEFAULT_SPREAD = Math.PI * 0.85;
+
+export type ConfettiOrigin = { x: number; y: number };
+
+export type ConfettiOptions = {
+  particleCount?: number;
+  origin?: ConfettiOrigin;
+  /** Burst direction in radians. 0 = right, -π/2 = up, π = left. */
+  angle?: number;
+  /** Cone width in radians. */
+  spread?: number;
+  onComplete?: () => void;
+};
+
+type Particle = {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  w: number;
+  h: number;
+  color: string;
+  rotation: number;
+  spin: number;
+  life: number;
+  decay: number;
+};
+
+let canvas: HTMLCanvasElement | null = null;
+let ctx: CanvasRenderingContext2D | null = null;
+let particles: Particle[] = [];
+let rafId = 0;
+let pendingComplete: (() => void) | undefined;
+
+function readToken(name: string): string {
+  return getComputedStyle(document.documentElement)
+    .getPropertyValue(name)
+    .trim();
+}
+
+function tokenToPx(name: string, fallbackPx: number): number {
+  const raw = readToken(name);
+  if (!raw) return fallbackPx;
+
+  if (raw.endsWith("rem")) {
+    const root = parseFloat(getComputedStyle(document.documentElement).fontSize);
+    return parseFloat(raw) * root;
+  }
+
+  if (raw.endsWith("px")) return parseFloat(raw);
+
+  return fallbackPx;
+}
+
+function resolveTokenColor(token: string): string {
+  const probe = document.createElement("span");
+  probe.style.setProperty("color", `var(${token})`);
+  probe.style.position = "absolute";
+  probe.style.visibility = "hidden";
+  document.body.appendChild(probe);
+  const resolved = getComputedStyle(probe).color;
+  probe.remove();
+  return resolved;
+}
+
+function readColors(): string[] {
+  return COLOR_TOKENS.map(resolveTokenColor).filter(
+    (color) => color.length > 0 && color !== "rgba(0, 0, 0, 0)",
+  );
+}
+
+function prefersReducedMotion(): boolean {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function resizeCanvas() {
+  if (!canvas || !ctx) return;
+
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = window.innerWidth * dpr;
+  canvas.height = window.innerHeight * dpr;
+  canvas.style.width = `${window.innerWidth}px`;
+  canvas.style.height = `${window.innerHeight}px`;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+
+function ensureCanvas() {
+  if (canvas) return;
+
+  canvas = document.createElement("canvas");
+  canvas.className = "pointer-events-none fixed inset-0 z-50";
+  canvas.setAttribute("aria-hidden", "true");
+  document.body.appendChild(canvas);
+  ctx = canvas.getContext("2d");
+  resizeCanvas();
+  window.addEventListener("resize", resizeCanvas);
+}
+
+function destroyCanvas() {
+  if (!canvas) return;
+
+  window.removeEventListener("resize", resizeCanvas);
+  canvas.remove();
+  canvas = null;
+  ctx = null;
+}
+
+function spawnParticles({
+  particleCount = DEFAULT_PARTICLE_COUNT,
+  origin = DEFAULT_ORIGIN,
+  angle = DEFAULT_ANGLE,
+  spread = DEFAULT_SPREAD,
+}: ConfettiOptions) {
+  const colors = readColors();
+  if (colors.length === 0) return;
+
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+  const originX = origin.x * width;
+  const originY = origin.y * height;
+  const sizeBase = tokenToPx("--spacing-3", 12);
+
+  for (let index = 0; index < particleCount; index += 1) {
+    const particleAngle = angle + (Math.random() - 0.5) * spread;
+    const speed = 8 + Math.random() * 12;
+
+    particles.push({
+      x: originX + (Math.random() - 0.5) * tokenToPx("--spacing-16", 64),
+      y: originY,
+      vx: Math.cos(particleAngle) * speed,
+      vy: Math.sin(particleAngle) * speed,
+      w: sizeBase * (0.55 + Math.random() * 0.75),
+      h: sizeBase * (0.35 + Math.random() * 0.55),
+      color: colors[Math.floor(Math.random() * colors.length)]!,
+      rotation: Math.random() * Math.PI * 2,
+      spin: (Math.random() - 0.5) * 0.22,
+      life: 1,
+      decay: 0.003 + Math.random() * 0.004,
+    });
+  }
+}
+
+function tick() {
+  if (!ctx) return;
+
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+  ctx.clearRect(0, 0, width, height);
+
+  particles = particles.filter((particle) => {
+    particle.vy += 0.1;
+    particle.vx *= 0.994;
+    particle.vy *= 0.992;
+    particle.x += particle.vx;
+    particle.y += particle.vy;
+    particle.rotation += particle.spin;
+    particle.life -= particle.decay;
+
+    if (
+      particle.life <= 0 ||
+      particle.y > height + tokenToPx("--spacing-5", 20) ||
+      particle.y < -tokenToPx("--spacing-16", 64) ||
+      particle.x < -tokenToPx("--spacing-16", 64) ||
+      particle.x > width + tokenToPx("--spacing-16", 64)
+    ) {
+      return false;
+    }
+
+    ctx!.save();
+    ctx!.translate(particle.x, particle.y);
+    ctx!.rotate(particle.rotation);
+    ctx!.globalAlpha = Math.max(particle.life, 0);
+    ctx!.fillStyle = particle.color;
+    ctx!.fillRect(
+      -particle.w / 2,
+      -particle.h / 2,
+      particle.w,
+      particle.h,
+    );
+    ctx!.restore();
+
+    return true;
+  });
+
+  if (particles.length > 0) {
+    rafId = requestAnimationFrame(tick);
+    return;
+  }
+
+  cancelAnimationFrame(rafId);
+  rafId = 0;
+  destroyCanvas();
+  pendingComplete?.();
+  pendingComplete = undefined;
+}
+
+export function fireConfetti(options: ConfettiOptions = {}) {
+  if (typeof window === "undefined" || prefersReducedMotion()) {
+    options.onComplete?.();
+    return;
+  }
+
+  ensureCanvas();
+  spawnParticles(options);
+
+  pendingComplete = options.onComplete;
+
+  cancelAnimationFrame(rafId);
+  rafId = requestAnimationFrame(tick);
+}
+
+type ConfettiProps = ConfettiOptions & {
+  active?: boolean;
+};
+
+export function Confetti({
+  active = false,
+  particleCount,
+  origin,
+  angle,
+  spread,
+  onComplete,
+}: ConfettiProps) {
+  const firedRef = React.useRef(false);
+
+  React.useEffect(() => {
+    if (!active) {
+      firedRef.current = false;
+      return;
+    }
+
+    if (firedRef.current) return;
+
+    firedRef.current = true;
+    fireConfetti({ particleCount, origin, angle, spread, onComplete });
+  }, [active, particleCount, origin, angle, spread, onComplete]);
+
+  return null;
+}

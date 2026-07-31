@@ -14,6 +14,7 @@ import {
   XSocialIcon,
   YoutubeSocialIcon,
 } from "@/components/ui/custom/social-icons";
+import { fireConfetti } from "@/components/ui/custom/confetti";
 import { emailRegistrySources } from "@/lib/email-registry";
 import { socialLinks } from "@/lib/social-links";
 import { useEmailRegistrySubmit } from "@/hooks/use-email-registry-submit";
@@ -22,6 +23,7 @@ import { cn } from "@/lib/utils";
 const SHOW_DELAY_MS = 4000;
 const HIDE_DURATION_MS = 350;
 const SUCCESS_DISMISS_MS = 1800;
+const CONFETTI_DELAY_MS = 350;
 
 type SocialLinkButtonProps = {
   href: string;
@@ -50,6 +52,8 @@ function SocialLinkButton({ href, label, children }: SocialLinkButtonProps) {
 }
 
 function FollowPopup() {
+  const popupRef = React.useRef<HTMLElement>(null);
+  const confettiFiredRef = React.useRef(false);
   const [mounted, setMounted] = React.useState(false);
   const [active, setActive] = React.useState(false);
   const [open, setOpen] = React.useState(false);
@@ -89,11 +93,6 @@ function FollowPopup() {
 
       timeout = setTimeout(() => {
         setActive(true);
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            setOpen(true);
-          });
-        });
       }, SHOW_DELAY_MS);
     };
 
@@ -107,6 +106,49 @@ function FollowPopup() {
       document.removeEventListener("visibilitychange", schedule);
     };
   }, [dismissed]);
+
+  React.useEffect(() => {
+    if (!active) {
+      setOpen(false);
+      confettiFiredRef.current = false;
+      return;
+    }
+
+    const frame = requestAnimationFrame(() => {
+      setOpen(true);
+    });
+
+    return () => {
+      cancelAnimationFrame(frame);
+    };
+  }, [active]);
+
+  React.useEffect(() => {
+    if (!open) return;
+
+    const timeout = window.setTimeout(() => {
+      if (confettiFiredRef.current || !popupRef.current) return;
+
+      confettiFiredRef.current = true;
+
+      const rect = popupRef.current.getBoundingClientRect();
+      const originY = (rect.top + rect.height * 0.35) / window.innerHeight;
+
+      fireConfetti({
+        particleCount: 56,
+        origin: {
+          x: rect.left / window.innerWidth,
+          y: originY,
+        },
+        angle: -Math.PI * 0.75,
+        spread: Math.PI * 0.55,
+      });
+    }, CONFETTI_DELAY_MS);
+
+    return () => {
+      window.clearTimeout(timeout);
+    };
+  }, [open]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -124,13 +166,14 @@ function FollowPopup() {
 
   return (
     <aside
+      ref={popupRef}
       aria-live="polite"
       aria-label="Follow Adam"
       className={cn(
-        "fixed right-0 bottom-0 z-40 w-[calc(100%-var(--spacing-8))] max-w-[calc(var(--spacing-24)*4+var(--spacing-12))] origin-bottom-right p-4 pr-[calc(var(--spacing-4)+var(--safe-area-inset-right))] pb-[calc(var(--spacing-4)+var(--safe-area-inset-bottom))] pl-[calc(var(--spacing-4)+var(--safe-area-inset-left))] transition-[opacity,transform] duration-normal ease-emphasized will-change-transform",
+        "fixed right-0 bottom-0 z-40 w-[calc(100%-var(--spacing-8))] max-w-[calc(var(--spacing-24)*4+var(--spacing-12))] p-4 pr-[calc(var(--spacing-4)+var(--safe-area-inset-right))] pb-[calc(var(--spacing-4)+var(--safe-area-inset-bottom))] pl-[calc(var(--spacing-4)+var(--safe-area-inset-left))] transition-transform duration-normal ease-emphasized",
         open
-          ? "pointer-events-auto translate-x-0 translate-y-0 opacity-100"
-          : "pointer-events-none translate-x-8 translate-y-10 opacity-0",
+          ? "pointer-events-auto translate-y-0"
+          : "pointer-events-none translate-y-full",
       )}
     >
       <div
