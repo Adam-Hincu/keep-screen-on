@@ -47,14 +47,19 @@ export const rootMetadata: Metadata = {
   },
   description: siteConfig.defaultDescription,
   applicationName: siteConfig.name,
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: siteConfig.name,
+  },
   authors: [{ name: siteConfig.author, url: siteConfig.twitterUrl }],
   creator: siteConfig.author,
   icons: {
     icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon/favicon.ico", sizes: "any" },
     ],
-    apple: "/apple-touch-icon.png",
+    apple: "/favicon/apple-touch-icon.png",
   },
   manifest: "/manifest.webmanifest",
   openGraph: {

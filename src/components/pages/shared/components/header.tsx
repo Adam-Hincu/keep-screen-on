@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { PageInset } from "@/components/pages/shared/components/page-inset";
+import { InstallAppButton } from "@/components/ui/custom/install-app-button";
 import { ModeToggle } from "@/components/ui/custom/mode-toggle";
 
 function readCssPx(variable: string) {
@@ -34,10 +35,14 @@ export function Header() {
   }, []);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50">
+    <header className="header-shell fixed inset-x-0 top-0 z-50">
       <div
         aria-hidden
-        className="absolute inset-0 border-b"
+        className="header-shell-safe-area absolute inset-x-0 top-0 bg-background"
+      />
+      <div
+        aria-hidden
+        className="header-shell-bg absolute inset-x-0 bottom-0 border-b"
         style={{
           backgroundColor: `color-mix(in oklch, var(--header-surface) calc(${opacity * 100}%), transparent)`,
           borderBottomColor: `color-mix(in oklch, var(--border) calc(${opacity * 100}%), transparent)`,
@@ -51,7 +56,8 @@ export function Header() {
               : undefined,
         }}
       />
-      <PageInset className="relative flex justify-end py-3">
+      <PageInset className="relative flex items-center justify-end gap-2 py-3">
+        <InstallAppButton />
         <ModeToggle />
       </PageInset>
     </header>
