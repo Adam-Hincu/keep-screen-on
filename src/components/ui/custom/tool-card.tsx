@@ -1,6 +1,7 @@
 "use client";
 
 import { Play, Square } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import {
@@ -17,6 +18,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/shadcn/dialog";
+import {
+  buildDurationParams,
+  getPageKeyFromPath,
+  trackCustomTimeSet,
+  trackDurationSelected,
+  trackSessionEnd,
+  trackSessionStart,
+  trackTabSwitchNoticeDismiss,
+  trackWakeLockFailed,
+  type DurationParams,
+  type SessionStopReason,
+} from "@/lib/analytics";
 import { isKeepScreenOnSupported, keepScreenOn } from "@/lib/keep-screen-on";
 import { tabSwitchNotice } from "@/lib/tab-switch-notice";
 
@@ -56,6 +69,9 @@ function selectionToTime(selection: Selection): TimeValue {
 }
 
 export function ToolCard() {
+  const pathname = usePathname();
+  const pageKey = getPageKeyFromPath(pathname);
+
   const [selection, setSelection] = useState<Selection>("infinite");
   const [customTime, setCustomTime] = useState<TimeValue>(emptyTime);
   const [isActive, setIsActive] = useState(false);
@@ -65,27 +81,123 @@ export function ToolCard() {
   const startedAtRef = useRef(0);
   const durationSecondsRef = useRef(0);
   const countUpRef = useRef(false);
+  const isActiveRef = useRef(false);
+  const sessionDurationRef = useRef<DurationParams>(
+    buildDurationParams("infinite", 0),
+  );
+  const sessionEndedRef = useRef(false);
+  const pageKeyRef = useRef(pageKey);
+
+  pageKeyRef.current = pageKey;
 
   const staticTime =
     selection === "custom" ? customTime : selectionToTime(selection);
   const displayTime = isActive ? runningTime : staticTime;
   const canStart = selection !== "custom" || timeToSeconds(customTime) >= 1;
 
-  const stopSession = useCallback(async () => {
-    await keepScreenOn.release();
-    setIsActive(false);
+  const getElapsedSeconds = useCallback(() => {
+    if (!isActiveRef.current || startedAtRef.current === 0) {
+      return 0;
+    }
+
+    return Math.floor((Date.now() - startedAtRef.current) / 1000);
+  }, []);
+
+  const endSessionAnalytics = useCallback(
+    (stopReason: SessionStopReason, options?: { beacon?: boolean }) => {
+      if (sessionEndedRef.current) {
+        return;
+      }
+
+      sessionEndedRef.current = true;
+      trackSessionEnd(
+        pageKeyRef.current,
+        sessionDurationRef.current,
+        stopReason,
+        getElapsedSeconds(),
+        options,
+      );
+    },
+    [getElapsedSeconds],
+  );
+
+  const stopSession = useCallback(
+    async (stopReason: SessionStopReason = "manual") => {
+      endSessionAnalytics(stopReason);
+      await keepScreenOn.release();
+      setIsActive(false);
+      isActiveRef.current = false;
+    },
+    [endSessionAnalytics],
+  );
+
+  const selectDuration = useCallback(
+    (nextSelection: Selection) => {
+      setSelection(nextSelection);
+
+      if (isActiveRef.current) {
+        return;
+      }
+
+      const customSeconds =
+        nextSelection === "custom" ? timeToSeconds(customTime) : 0;
+      trackDurationSelected(pageKeyRef.current, nextSelection, customSeconds);
+    },
+    [customTime],
+  );
+
+  const handleCustomTimeChange = useCallback((nextTime: TimeValue) => {
+    setCustomTime(nextTime);
+
+    if (isActiveRef.current) {
+      return;
+    }
+
+    trackCustomTimeSet(
+      pageKeyRef.current,
+      nextTime.hours,
+      nextTime.minutes,
+      nextTime.seconds,
+    );
   }, []);
 
   const startSession = useCallback(async () => {
     if (!isKeepScreenOnSupported()) {
+      trackWakeLockFailed(pageKeyRef.current, "unsupported");
       return;
     }
 
     const countUp = selection === "infinite";
     const durationSeconds = countUp ? 0 : timeToSeconds(staticTime);
-    const result = await keepScreenOn.request();
+    const durationParams = buildDurationParams(
+      selection,
+      timeToSeconds(customTime),
+    );
+
+    sessionEndedRef.current = false;
+    sessionDurationRef.current = durationParams;
+
+    const result = await keepScreenOn.request({
+      onRelease: () => {
+        if (!keepScreenOn.isSessionActive() || !isActiveRef.current) {
+          return;
+        }
+
+        endSessionAnalytics("wake_lock_released");
+        setIsActive(false);
+        isActiveRef.current = false;
+      },
+      onError: (failure) => {
+        if (!isActiveRef.current) {
+          return;
+        }
+
+        trackWakeLockFailed(pageKeyRef.current, failure.reason);
+      },
+    });
 
     if (!result.ok) {
+      trackWakeLockFailed(pageKeyRef.current, result.reason);
       return;
     }
 
@@ -94,7 +206,9 @@ export function ToolCard() {
     startedAtRef.current = Date.now();
     setRunningTime(countUp ? emptyTime : secondsToTime(durationSeconds));
     setIsActive(true);
-  }, [selection, staticTime]);
+    isActiveRef.current = true;
+    trackSessionStart(pageKeyRef.current, durationParams);
+  }, [customTime, endSessionAnalytics, selection, staticTime]);
 
   useEffect(() => {
     if (!isActive) {
@@ -113,7 +227,7 @@ export function ToolCard() {
       setRunningTime(secondsToTime(remaining));
 
       if (remaining === 0) {
-        void stopSession();
+        void stopSession("timer_complete");
       }
     };
 
@@ -126,6 +240,7 @@ export function ToolCard() {
   }, [isActive, stopSession]);
 
   useEffect(() => {
+    tabSwitchNotice.setElapsedSecondsProvider(getElapsedSeconds);
     tabSwitchNotice.start();
     const unsubscribe = tabSwitchNotice.subscribe(setShowTabSwitchNotice);
 
@@ -133,18 +248,29 @@ export function ToolCard() {
       unsubscribe();
       tabSwitchNotice.dispose();
     };
-  }, []);
+  }, [getElapsedSeconds]);
 
   useEffect(() => {
+    const onPageHide = () => {
+      if (isActiveRef.current) {
+        endSessionAnalytics("page_unload", { beacon: true });
+        isActiveRef.current = false;
+      }
+    };
+
+    window.addEventListener("pagehide", onPageHide);
+
     return () => {
+      window.removeEventListener("pagehide", onPageHide);
       void keepScreenOn.dispose();
     };
-  }, []);
+  }, [endSessionAnalytics]);
 
   const handleTabSwitchNoticeOpenChange = useCallback((open: boolean) => {
     setShowTabSwitchNotice(open);
 
     if (!open) {
+      trackTabSwitchNoticeDismiss(pageKeyRef.current);
       tabSwitchNotice.dismiss();
     }
   }, []);
@@ -183,7 +309,7 @@ export function ToolCard() {
           aria-label="Keep screen on with no time limit"
           aria-pressed={selection === "infinite"}
           disabled={isActive}
-          onClick={() => setSelection("infinite")}
+          onClick={() => selectDuration("infinite")}
         >
           No Limit
         </Button>
@@ -193,7 +319,7 @@ export function ToolCard() {
           className={buttonClassName}
           aria-pressed={selection === "custom"}
           disabled={isActive}
-          onClick={() => setSelection("custom")}
+          onClick={() => selectDuration("custom")}
         >
           Custom
         </Button>
@@ -208,7 +334,7 @@ export function ToolCard() {
             className={buttonClassName}
             aria-pressed={selection === duration}
             disabled={isActive}
-            onClick={() => setSelection(duration)}
+            onClick={() => selectDuration(duration)}
           >
             {duration}
           </Button>
@@ -218,7 +344,7 @@ export function ToolCard() {
       {selection === "custom" ? (
         <TimePicker
           value={displayTime}
-          onChange={setCustomTime}
+          onChange={handleCustomTimeChange}
           playing={isActive}
         />
       ) : (
@@ -241,7 +367,7 @@ export function ToolCard() {
           disabled={!isActive && !canStart}
           onClick={() => {
             if (isActive) {
-              void stopSession();
+              void stopSession("manual");
             } else {
               void startSession();
             }

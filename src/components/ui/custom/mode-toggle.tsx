@@ -2,9 +2,11 @@
 
 import * as React from "react";
 import { Monitor, Moon, Sun } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 
 import { Button } from "@/components/ui/shadcn/button";
+import { getPageKeyFromPath, trackThemeChange } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 const themes = ["light", "dark", "system"] as const;
@@ -23,6 +25,8 @@ function ModeToggle({
   className,
   ...props
 }: ModeToggleProps) {
+  const pathname = usePathname();
+  const pageKey = getPageKeyFromPath(pathname);
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
 
@@ -34,7 +38,9 @@ function ModeToggle({
     const currentTheme = (theme ?? "system") as Theme;
     const currentIndex = themes.indexOf(currentTheme);
     const nextIndex = (currentIndex + 1) % themes.length;
-    setTheme(themes[nextIndex]);
+    const nextTheme = themes[nextIndex];
+    setTheme(nextTheme);
+    trackThemeChange(pageKey, nextTheme);
   };
 
   const buttonVariant = variant === "ghost" ? "ghost" : "outline";

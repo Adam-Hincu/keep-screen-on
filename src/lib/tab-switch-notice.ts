@@ -1,7 +1,13 @@
+import {
+  getPageKeyFromPath,
+  trackTabSwitchDuringSession,
+  trackTabSwitchNoticeView,
+} from "@/lib/analytics";
 import { keepScreenOn } from "@/lib/keep-screen-on";
 
 export type TabSwitchNoticeOptions = {
   isSessionActive?: () => boolean;
+  getElapsedSeconds?: () => number;
   onNotice?: () => void;
 };
 
@@ -9,6 +15,7 @@ export type TabSwitchNoticeController = {
   shouldShow: () => boolean;
   dismiss: () => void;
   subscribe: (listener: (shouldShow: boolean) => void) => () => void;
+  setElapsedSecondsProvider: (provider: () => number) => void;
   start: () => void;
   dispose: () => void;
 };
@@ -28,6 +35,7 @@ export function createTabSwitchNotice(
 
   const isSessionActive =
     options.isSessionActive ?? (() => keepScreenOn.isSessionActive());
+  let getElapsedSeconds = options.getElapsedSeconds ?? (() => 0);
 
   function notify() {
     for (const listener of listeners) {
@@ -43,6 +51,13 @@ export function createTabSwitchNotice(
     if (document.visibilityState === "hidden") {
       if (isSessionActive()) {
         leftTabWhileSessionActive = true;
+
+        if (typeof window !== "undefined") {
+          trackTabSwitchDuringSession(
+            getPageKeyFromPath(window.location.pathname),
+            getElapsedSeconds(),
+          );
+        }
       }
       return;
     }
@@ -58,6 +73,11 @@ export function createTabSwitchNotice(
     }
 
     pendingNotice = true;
+
+    if (typeof window !== "undefined") {
+      trackTabSwitchNoticeView(getPageKeyFromPath(window.location.pathname));
+    }
+
     options.onNotice?.();
     notify();
   }
@@ -83,6 +103,10 @@ export function createTabSwitchNotice(
       return () => {
         listeners.delete(listener);
       };
+    },
+
+    setElapsedSecondsProvider(provider) {
+      getElapsedSeconds = provider;
     },
 
     start() {

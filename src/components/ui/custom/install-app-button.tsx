@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { Download } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 import { Button } from "@/components/ui/shadcn/button";
 import {
@@ -12,6 +13,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/shadcn/dialog";
+import {
+  getPageKeyFromPath,
+  trackPwaInstallClick,
+  trackPwaInstallResult,
+} from "@/lib/analytics";
 import {
   pwaInstall,
   type PwaInstallState,
@@ -24,6 +30,9 @@ type InstallAppButtonProps = Omit<
 >;
 
 function InstallAppButton({ className, ...props }: InstallAppButtonProps) {
+  const pathname = usePathname();
+  const pageKey = getPageKeyFromPath(pathname);
+
   const [state, setState] = React.useState<PwaInstallState>({
     available: false,
     method: null,
@@ -36,11 +45,29 @@ function InstallAppButton({ className, ...props }: InstallAppButtonProps) {
   }, []);
 
   const handleClick = async () => {
+    const currentState = pwaInstall.getState();
+
+    if (!currentState.available || !currentState.method) {
+      trackPwaInstallResult(pageKey, "unavailable");
+      return;
+    }
+
+    trackPwaInstallClick(pageKey, currentState.method);
+
     const result = await pwaInstall.requestInstall();
 
-    if (result.ok && result.method === "manual") {
-      setManualOpen(true);
+    if (!result.ok) {
+      trackPwaInstallResult(pageKey, result.reason);
+      return;
     }
+
+    if (result.method === "manual") {
+      trackPwaInstallResult(pageKey, "manual_shown", "manual");
+      setManualOpen(true);
+      return;
+    }
+
+    trackPwaInstallResult(pageKey, result.outcome, "native");
   };
 
   if (!state.available) {
