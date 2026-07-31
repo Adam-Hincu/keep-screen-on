@@ -59,11 +59,9 @@ export function Header() {
         }}
       />
       <PageInset className="relative flex items-center justify-between gap-2 py-3">
-        <div
-          aria-label={siteConfig.name}
-          className="flex min-w-0 items-center gap-2"
-        >
+        <div className="flex min-w-0 items-center gap-2">
           <Logo aria-hidden className="text-foreground" />
+          <span className="sr-only sm:hidden">{siteConfig.name}</span>
           <span className="hidden truncate font-heading text-sm font-semibold tracking-tight text-foreground sm:inline">
             Keep Screen ON
           </span>
