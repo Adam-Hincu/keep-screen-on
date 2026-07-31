@@ -63,12 +63,12 @@ export function createPageMetadata(pageKey: PageKey): Metadata {
       canonical: page.path,
     },
     openGraph: createOpenGraph({
-      title: page.title,
+      title: siteConfig.ogTitle,
       description: page.description,
       url: page.path,
     }),
     twitter: createTwitter({
-      title: page.title,
+      title: siteConfig.ogTitle,
       description: page.description,
     }),
     robots: {
@@ -104,12 +104,12 @@ export const rootMetadata: Metadata = {
   },
   manifest: "/manifest.webmanifest",
   openGraph: createOpenGraph({
-    title: homePage.title,
+    title: siteConfig.ogTitle,
     description: homePage.description,
     url: "/",
   }),
   twitter: createTwitter({
-    title: homePage.title,
+    title: siteConfig.ogTitle,
     description: homePage.description,
   }),
   robots: {

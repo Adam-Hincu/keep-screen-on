@@ -10,8 +10,9 @@ export const siteConfig = {
   language: "en",
   twitterHandle: "@AdamHincu",
   twitterUrl: "https://x.com/AdamHincu",
+  ogTitle: "Stop your screen from automatically Turning Off, Free, No Signup",
   defaultDescription:
-    "Stop your screen from automatically turning off in your browser. Free. No login. No downloads.",
+    "Keep Screen ON keeps your screen awake so background tasks keep running and you stay online in work apps.",
   themeColor: "#ebebeb",
   darkThemeColor: "#1a1a1a",
   backgroundColor: "#ffffff",
