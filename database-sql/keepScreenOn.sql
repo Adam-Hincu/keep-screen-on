@@ -68,7 +68,7 @@ COMMENT ON COLUMN public."Keep Screen ON".date_added IS
   'UTC timestamp of the first successful submission. Immutable.';
 
 COMMENT ON COLUMN public."Keep Screen ON".source IS
-  'Short app-defined signup origin label (e.g. follow-popup). First touch only; immutable.';
+  'Short app-defined signup origin label (e.g. email-popup). First touch only; immutable.';
 
 COMMENT ON COLUMN public."Keep Screen ON".submission_count IS
   'Total successful submissions for this email. Starts at 1; increments on re-entry.';

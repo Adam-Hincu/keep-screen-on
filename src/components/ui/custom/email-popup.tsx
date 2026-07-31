@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/custom/social-icons";
 import {
   fireConfetti,
-  getFollowPopupConfettiOptions,
+  getEmailPopupConfettiOptions,
 } from "@/components/ui/custom/confetti";
 import { emailRegistrySources } from "@/lib/email-registry";
 import { socialLinks } from "@/lib/social-links";
@@ -54,7 +54,7 @@ function SocialLinkButton({ href, label, children }: SocialLinkButtonProps) {
   );
 }
 
-function FollowPopup() {
+function EmailPopup() {
   const popupRef = React.useRef<HTMLElement>(null);
   const confettiFiredRef = React.useRef(false);
   const [mounted, setMounted] = React.useState(false);
@@ -74,7 +74,7 @@ function FollowPopup() {
 
   const { submit, isSubmitting, isSuccess, isError, errorMessage } =
     useEmailRegistrySubmit({
-      source: emailRegistrySources.followPopup,
+      source: emailRegistrySources.emailPopup,
       onSuccess: () => {
         window.setTimeout(dismissPopup, SUCCESS_DISMISS_MS);
       },
@@ -133,7 +133,7 @@ function FollowPopup() {
       if (confettiFiredRef.current || !popupRef.current) return;
 
       confettiFiredRef.current = true;
-      fireConfetti(getFollowPopupConfettiOptions(popupRef.current));
+      fireConfetti(getEmailPopupConfettiOptions(popupRef.current));
     }, CONFETTI_DELAY_MS);
 
     return () => {
@@ -220,7 +220,7 @@ function FollowPopup() {
               required
               disabled={isSubmitting || isSuccess}
               aria-invalid={isError}
-              aria-describedby={isError ? "follow-popup-email-error" : undefined}
+              aria-describedby={isError ? "email-popup-email-error" : undefined}
               className="h-10 min-w-0 w-full rounded-4xl border border-border bg-background px-3 text-sm text-foreground outline-none placeholder:text-muted-foreground disabled:opacity-disabled focus-visible:ring-[length:var(--ring-width-default)] focus-visible:ring-focus-ring-default aria-invalid:border-destructive-border aria-invalid:ring-[length:var(--ring-width-default)] aria-invalid:ring-destructive-ring sm:flex-1"
             />
             <Button
@@ -235,7 +235,7 @@ function FollowPopup() {
 
           {isError && errorMessage ? (
             <p
-              id="follow-popup-email-error"
+              id="email-popup-email-error"
               role="alert"
               className="text-sm text-destructive"
             >
@@ -266,4 +266,4 @@ function FollowPopup() {
   );
 }
 
-export { FollowPopup };
+export { EmailPopup };

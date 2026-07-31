@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { GoogleAnalytics } from "@/components/google-analytics";
 import { Header } from "@/components/pages/shared/components/header";
-import { FollowPopup } from "@/components/ui/custom/follow-popup";
+import { EmailPopup } from "@/components/ui/custom/email-popup";
 import { ThemeProvider } from "@/components/theme-provider";
 import { rootMetadata } from "@/lib/metadata";
 import { PWA_INSTALL_EARLY_CAPTURE_SCRIPT } from "@/lib/pwa-install";
@@ -61,7 +61,7 @@ export default function RootLayout({
         >
           <Header />
           {children}
-          <FollowPopup />
+          <EmailPopup />
         </ThemeProvider>
         <GoogleAnalytics />
       </body>

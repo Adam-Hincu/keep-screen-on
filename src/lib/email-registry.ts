@@ -96,7 +96,7 @@ export async function submitEmailToRegistry(
 }
 
 export const emailRegistrySources = {
-  followPopup: "follow-popup",
+  emailPopup: "email-popup",
 } as const;
 
 export type EmailRegistrySource =

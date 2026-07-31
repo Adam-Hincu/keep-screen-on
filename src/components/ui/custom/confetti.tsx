@@ -36,8 +36,8 @@ function isDesktopViewport(): boolean {
   return window.matchMedia(DESKTOP_MEDIA_QUERY).matches;
 }
 
-/** Confetti tuned for the follow popup: always originates from the card. */
-export function getFollowPopupConfettiOptions(
+/** Confetti tuned for the email popup: always originates from the card. */
+export function getEmailPopupConfettiOptions(
   popupElement: HTMLElement,
 ): ConfettiOptions {
   const rect = popupElement.getBoundingClientRect();
