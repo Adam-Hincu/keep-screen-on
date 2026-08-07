@@ -12,6 +12,7 @@ export type SitePage = {
   title: string;
   description: string;
   operatingSystem: string;
+  navLabel: string;
 };
 
 export const sitePages: SitePage[] = [
@@ -22,6 +23,7 @@ export const sitePages: SitePage[] = [
     description:
       "Keep Screen ON keeps your screen awake so background tasks keep running and you stay online in work apps.",
     operatingSystem: "Any",
+    navLabel: "All devices",
   },
   {
     key: "iphone",
@@ -30,6 +32,7 @@ export const sitePages: SitePage[] = [
     description:
       "Keep Screen ON keeps your iphone's screen awake so background tasks keep running and you stay online in work apps.",
     operatingSystem: "iOS",
+    navLabel: "iPhone",
   },
   {
     key: "android",
@@ -38,6 +41,7 @@ export const sitePages: SitePage[] = [
     description:
       "Keep Screen ON keeps your phone's screen awake so background tasks keep running and you stay online in work apps.",
     operatingSystem: "Android",
+    navLabel: "Android",
   },
   {
     key: "mac",
@@ -46,6 +50,7 @@ export const sitePages: SitePage[] = [
     description:
       "Keep Screen ON keeps your mac's screen awake so background tasks keep running and you stay online in work apps.",
     operatingSystem: "macOS",
+    navLabel: "Mac",
   },
   {
     key: "windows",
@@ -55,6 +60,7 @@ export const sitePages: SitePage[] = [
     description:
       "Keep Screen ON keeps your computer's screen awake so background tasks keep running and you stay online in work apps.",
     operatingSystem: "Windows",
+    navLabel: "Windows",
   },
   {
     key: "linux",
@@ -64,6 +70,7 @@ export const sitePages: SitePage[] = [
     description:
       "Keep Screen ON keeps your computer's screen awake so background tasks keep running and you stay online in work apps.",
     operatingSystem: "Linux",
+    navLabel: "Linux",
   },
 ];
 
@@ -75,4 +82,8 @@ export function getPageByKey(key: PageKey): SitePage {
   }
 
   return page;
+}
+
+export function getLinkedPages(currentPageKey: PageKey): SitePage[] {
+  return sitePages.filter((page) => page.key !== currentPageKey);
 }

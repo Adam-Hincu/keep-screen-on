@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { PageInset } from "@/components/pages/shared/components/page-inset";
@@ -59,13 +60,16 @@ export function Header() {
         }}
       />
       <PageInset className="relative flex items-center justify-between gap-2 py-3">
-        <div className="flex min-w-0 items-center gap-2">
+        <Link
+          href="/"
+          className="flex min-w-0 items-center gap-2 rounded-sm focus-visible:outline-none focus-visible:ring-[length:var(--ring-width-default)] focus-visible:ring-focus-ring-default"
+        >
           <Logo aria-hidden className="text-foreground" />
           <span className="sr-only sm:hidden">{siteConfig.name}</span>
           <span className="hidden truncate font-heading text-sm font-semibold tracking-tight text-foreground sm:inline">
             Keep Screen ON
           </span>
-        </div>
+        </Link>
         <div className="flex shrink-0 items-center gap-2">
           <InstallAppButton />
           <ModeToggle />

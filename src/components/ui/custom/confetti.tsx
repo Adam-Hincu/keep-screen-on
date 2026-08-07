@@ -81,10 +81,17 @@ type Particle = {
   decay: number;
 };
 
+/** Physics tuned for this reference frame duration; motion scales by real elapsed time. */
+const REFERENCE_FRAME_MS = 1000 / 60;
+const MAX_DELTA_MS = REFERENCE_FRAME_MS * 2;
+/** Multiplier on simulation time — higher = snappier burst and shorter lifetime. */
+const SPEED = 1.75;
+
 let canvas: HTMLCanvasElement | null = null;
 let ctx: CanvasRenderingContext2D | null = null;
 let particles: Particle[] = [];
 let rafId = 0;
+let lastFrameTime = 0;
 let pendingComplete: (() => void) | undefined;
 
 function readToken(name: string): string {
@@ -157,7 +164,7 @@ function spawnParticles({
 
   for (let index = 0; index < particleCount; index += 1) {
     const particleAngle = angle + (Math.random() - 0.5) * spread;
-    const speed = 8 + Math.random() * 12;
+    const speed = 12 + Math.random() * 16;
 
     particles.push({
       x: originX + (Math.random() - 0.5) * tokenToPx("--spacing-16", 64),
@@ -169,28 +176,32 @@ function spawnParticles({
       color:
         CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)]!,
       rotation: Math.random() * Math.PI * 2,
-      spin: (Math.random() - 0.5) * 0.22,
+      spin: (Math.random() - 0.5) * 0.3,
       life: 1,
-      decay: 0.003 + Math.random() * 0.004,
+      decay: 0.005 + Math.random() * 0.006,
     });
   }
 }
 
-function tick() {
+function tick(now: number) {
   if (!ctx) return;
+
+  const rawDelta = lastFrameTime === 0 ? REFERENCE_FRAME_MS : now - lastFrameTime;
+  lastFrameTime = now;
+  const dt = (Math.min(rawDelta, MAX_DELTA_MS) / REFERENCE_FRAME_MS) * SPEED;
 
   const width = window.innerWidth;
   const height = window.innerHeight;
   ctx.clearRect(0, 0, width, height);
 
   particles = particles.filter((particle) => {
-    particle.vy += 0.1;
-    particle.vx *= 0.994;
-    particle.vy *= 0.992;
-    particle.x += particle.vx;
-    particle.y += particle.vy;
-    particle.rotation += particle.spin;
-    particle.life -= particle.decay;
+    particle.vy += 0.22 * dt;
+    particle.vx *= Math.pow(0.988, dt);
+    particle.vy *= Math.pow(0.99, dt);
+    particle.x += particle.vx * dt;
+    particle.y += particle.vy * dt;
+    particle.rotation += particle.spin * dt;
+    particle.life -= particle.decay * dt;
 
     if (
       particle.life <= 0 ||
@@ -225,6 +236,7 @@ function tick() {
 
   cancelAnimationFrame(rafId);
   rafId = 0;
+  lastFrameTime = 0;
   destroyCanvas();
   pendingComplete?.();
   pendingComplete = undefined;
@@ -242,6 +254,7 @@ export function fireConfetti(options: ConfettiOptions = {}) {
   pendingComplete = options.onComplete;
 
   cancelAnimationFrame(rafId);
+  lastFrameTime = 0;
   rafId = requestAnimationFrame(tick);
 }
 
