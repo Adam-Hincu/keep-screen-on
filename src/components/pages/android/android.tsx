@@ -1,5 +1,6 @@
 import { Hero } from "@/components/pages/shared/sections/hero";
 import { SeoSection } from "@/components/pages/android/sections/seo-section";
+import { AndroidTimelineSection } from "@/components/pages/android/sections/android-timeline-section";
 import { FaqSection } from "@/components/pages/shared/sections/faq-section";
 import { HowItWorksSection } from "@/components/pages/shared/sections/how-it-works-section";
 import { PlatformLinksSection } from "@/components/pages/shared/sections/platform-links-section";
@@ -27,6 +28,10 @@ export function Android() {
       <SectionSeparator />
       <PageInset>
         <FaqSection pageKey="android" />
+      </PageInset>
+      <SectionSeparator />
+      <PageInset>
+        <AndroidTimelineSection />
       </PageInset>
     </main>
   );

@@ -1,5 +1,6 @@
 import { Hero } from "@/components/pages/shared/sections/hero";
 import { SeoSection } from "@/components/pages/iphone/sections/seo-section";
+import { IphoneChecklistSection } from "@/components/pages/iphone/sections/iphone-checklist-section";
 import { FaqSection } from "@/components/pages/shared/sections/faq-section";
 import { HowItWorksSection } from "@/components/pages/shared/sections/how-it-works-section";
 import { PlatformLinksSection } from "@/components/pages/shared/sections/platform-links-section";
@@ -27,6 +28,10 @@ export function Iphone() {
       <SectionSeparator />
       <PageInset>
         <FaqSection pageKey="iphone" />
+      </PageInset>
+      <SectionSeparator />
+      <PageInset>
+        <IphoneChecklistSection />
       </PageInset>
     </main>
   );

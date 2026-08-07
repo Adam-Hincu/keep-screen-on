@@ -1,5 +1,6 @@
 import { Hero } from "@/components/pages/shared/sections/hero";
 import { SeoSection } from "@/components/pages/mac/sections/seo-section";
+import { MacDetailsSection } from "@/components/pages/mac/sections/mac-details-section";
 import { FaqSection } from "@/components/pages/shared/sections/faq-section";
 import { HowItWorksSection } from "@/components/pages/shared/sections/how-it-works-section";
 import { PlatformLinksSection } from "@/components/pages/shared/sections/platform-links-section";
@@ -27,6 +28,10 @@ export function Mac() {
       <SectionSeparator />
       <PageInset>
         <FaqSection pageKey="mac" />
+      </PageInset>
+      <SectionSeparator />
+      <PageInset>
+        <MacDetailsSection />
       </PageInset>
     </main>
   );

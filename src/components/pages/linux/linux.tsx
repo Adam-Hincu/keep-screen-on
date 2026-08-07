@@ -1,5 +1,6 @@
 import { Hero } from "@/components/pages/shared/sections/hero";
 import { SeoSection } from "@/components/pages/linux/sections/seo-section";
+import { LinuxGuideSection } from "@/components/pages/linux/sections/linux-guide-section";
 import { FaqSection } from "@/components/pages/shared/sections/faq-section";
 import { HowItWorksSection } from "@/components/pages/shared/sections/how-it-works-section";
 import { PlatformLinksSection } from "@/components/pages/shared/sections/platform-links-section";
@@ -27,6 +28,10 @@ export function Linux() {
       <SectionSeparator />
       <PageInset>
         <FaqSection pageKey="linux" />
+      </PageInset>
+      <SectionSeparator />
+      <PageInset>
+        <LinuxGuideSection />
       </PageInset>
     </main>
   );

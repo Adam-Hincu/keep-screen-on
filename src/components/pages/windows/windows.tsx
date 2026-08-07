@@ -1,5 +1,6 @@
 import { Hero } from "@/components/pages/shared/sections/hero";
 import { SeoSection } from "@/components/pages/windows/sections/seo-section";
+import { WindowsCompareSection } from "@/components/pages/windows/sections/windows-compare-section";
 import { FaqSection } from "@/components/pages/shared/sections/faq-section";
 import { HowItWorksSection } from "@/components/pages/shared/sections/how-it-works-section";
 import { PlatformLinksSection } from "@/components/pages/shared/sections/platform-links-section";
@@ -27,6 +28,10 @@ export function Windows() {
       <SectionSeparator />
       <PageInset>
         <FaqSection pageKey="windows" />
+      </PageInset>
+      <SectionSeparator />
+      <PageInset>
+        <WindowsCompareSection />
       </PageInset>
     </main>
   );
