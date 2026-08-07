@@ -2,7 +2,6 @@ import { Hero } from "@/components/pages/shared/sections/hero";
 import { SeoSection } from "@/components/pages/android/sections/seo-section";
 import { FaqSection } from "@/components/pages/shared/sections/faq-section";
 import { HowItWorksSection } from "@/components/pages/shared/sections/how-it-works-section";
-import { PageGuideSection } from "@/components/pages/shared/sections/page-guide-section";
 import { PlatformLinksSection } from "@/components/pages/shared/sections/platform-links-section";
 import { PageInset } from "@/components/pages/shared/components/page-inset";
 import { SectionSeparator } from "@/components/pages/shared/components/section-separator";
@@ -16,10 +15,6 @@ export function Android() {
       <SectionSeparator />
       <PageInset>
         <SeoSection />
-      </PageInset>
-      <SectionSeparator />
-      <PageInset>
-        <PageGuideSection pageKey="android" />
       </PageInset>
       <SectionSeparator />
       <PageInset>
